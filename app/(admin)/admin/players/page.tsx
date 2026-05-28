@@ -1,0 +1,99 @@
+"use client";
+
+import { useState, useEffect } from "react";
+
+type Player = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  gender: string;
+  playFootballId: string | null;
+};
+
+export default function PlayersAdmin() {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<{ imported: number; skipped: number } | null>(null);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    fetch("/api/admin/players?" + new URLSearchParams({ q: search }))
+      .then((r) => r.json())
+      .then(setPlayers)
+      .catch(() => {});
+  }, [search]);
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImporting(true);
+    setImportResult(null);
+
+    const form = new FormData();
+    form.append("file", file);
+
+    const res = await fetch("/api/players/import", { method: "POST", body: form });
+    const data = await res.json();
+    setImportResult(data);
+    setImporting(false);
+
+    if (res.ok) {
+      // Refresh list
+      fetch("/api/admin/players").then((r) => r.json()).then(setPlayers);
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-black text-navy">Players</h1>
+        <label className={`cursor-pointer bg-brand hover:bg-brand-dark text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors ${importing ? "opacity-60" : ""}`}>
+          {importing ? "Importing…" : "Import CSV"}
+          <input type="file" accept=".csv" className="sr-only" onChange={handleImport} disabled={importing} />
+        </label>
+      </div>
+
+      {importResult && (
+        <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg mb-4">
+          Imported {importResult.imported} players, skipped {importResult.skipped} duplicates.
+        </div>
+      )}
+
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search by name…"
+        className="w-full border border-border rounded-lg px-3 py-2 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-brand"
+      />
+
+      <div className="bg-white border border-border rounded-xl overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-navy text-white">
+            <tr>
+              <th className="px-4 py-3 text-left font-semibold">Name</th>
+              <th className="px-4 py-3 text-left font-semibold">DOB</th>
+              <th className="px-4 py-3 text-left font-semibold">Gender</th>
+              <th className="px-4 py-3 text-left font-semibold">PlayFootball ID</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {players.map((p) => (
+              <tr key={p.id} className="hover:bg-gray-50">
+                <td className="px-4 py-2.5 font-semibold">{p.firstName} {p.lastName}</td>
+                <td className="px-4 py-2.5 text-muted">{new Date(p.dateOfBirth).toLocaleDateString("en-AU")}</td>
+                <td className="px-4 py-2.5 text-muted capitalize">{p.gender.toLowerCase()}</td>
+                <td className="px-4 py-2.5 text-muted font-mono text-xs">{p.playFootballId ?? "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {players.length === 0 && (
+          <p className="text-center text-muted py-8 text-sm">
+            No players yet. Import a CSV from PlayFootball to get started.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}

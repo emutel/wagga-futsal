@@ -1,0 +1,339 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Auth ────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  passwordHash String
+  name         String
+  role         UserRole     @default(REFEREE)
+  createdAt    DateTime     @default(now())
+
+  referee      Referee?
+  sessions     AuthSession[]
+}
+
+model AuthSession {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique @default(cuid())
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  ADMIN
+  REFEREE
+}
+
+// ─── People ──────────────────────────────────────────────────────────────────
+
+model Player {
+  id             String   @id @default(cuid())
+  firstName      String
+  lastName       String
+  dateOfBirth    DateTime
+  gender         Gender
+  playFootballId String?  @unique
+  createdAt      DateTime @default(now())
+
+  teamPlayers TeamPlayer[]
+  matchEvents MatchEvent[]
+  suspensions Suspension[]
+}
+
+model Referee {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  phone     String?
+  createdAt DateTime @default(now())
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fieldRefGames   Fixture[] @relation("FieldReferee")
+  scorerGames     Fixture[] @relation("Scorer")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  MIXED
+}
+
+// ─── Venues & Pitches ────────────────────────────────────────────────────────
+
+model Venue {
+  id      String  @id @default(cuid())
+  name    String
+  address String?
+  pitches Pitch[]
+}
+
+model Pitch {
+  id       String   @id @default(cuid())
+  name     String
+  venueId  String
+  venue    Venue    @relation(fields: [venueId], references: [id])
+  slots    CompetitionTimeSlot[]
+  fixtures Fixture[]
+}
+
+// ─── Competitions ────────────────────────────────────────────────────────────
+
+model Competition {
+  id        String            @id @default(cuid())
+  name      String
+  season    String
+  ageGroup  AgeGroup
+  gender    Gender            @default(MIXED)
+  status    CompetitionStatus @default(REGISTRATION)
+  createdAt DateTime          @default(now())
+
+  timeSlots CompetitionTimeSlot[]
+  teams     CompetitionTeam[]
+  fixtures  Fixture[]
+  suspensions Suspension[]
+}
+
+model CompetitionTimeSlot {
+  id            String      @id @default(cuid())
+  competitionId String
+  pitchId       String
+  dayOfWeek     Int         // 0=Sun … 6=Sat
+  startTime     String      // "18:00"
+  durationMins  Int         @default(40)
+
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  pitch         Pitch       @relation(fields: [pitchId], references: [id])
+}
+
+model Team {
+  id           String   @id @default(cuid())
+  name         String
+  contactEmail String?
+  contactPhone String?
+  createdAt    DateTime @default(now())
+
+  players      TeamPlayer[]
+  competitions CompetitionTeam[]
+  homeFixtures Fixture[]   @relation("HomeTeam")
+  awayFixtures Fixture[]   @relation("AwayTeam")
+  events       MatchEvent[]
+}
+
+model TeamPlayer {
+  id           String   @id @default(cuid())
+  teamId       String
+  playerId     String
+  jerseyNumber Int?
+  createdAt    DateTime @default(now())
+
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, playerId])
+}
+
+model CompetitionTeam {
+  id            String   @id @default(cuid())
+  competitionId String
+  teamId        String
+  createdAt     DateTime @default(now())
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  team        Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([competitionId, teamId])
+}
+
+enum AgeGroup {
+  U8
+  U10
+  U12
+  U14
+  U16
+  U19
+  OPENS
+  SOCIAL
+}
+
+enum CompetitionStatus {
+  REGISTRATION
+  ACTIVE
+  FINALS
+  COMPLETED
+}
+
+// ─── Fixtures ────────────────────────────────────────────────────────────────
+
+model Fixture {
+  id             String        @id @default(cuid())
+  competitionId  String
+  homeTeamId     String
+  awayTeamId     String
+  pitchId        String?
+  fieldRefereeId String?
+  scorerId       String?
+  scheduledAt    DateTime
+  round          Int
+  phase          FixturePhase  @default(REGULAR)
+  status         FixtureStatus @default(SCHEDULED)
+  homeScore      Int           @default(0)
+  awayScore      Int           @default(0)
+  homeFoulsH1    Int           @default(0)
+  awayFoulsH1    Int           @default(0)
+  homeFoulsH2    Int           @default(0)
+  awayFoulsH2    Int           @default(0)
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  competition  Competition @relation(fields: [competitionId], references: [id])
+  homeTeam     Team        @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam     Team        @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  pitch        Pitch?      @relation(fields: [pitchId], references: [id])
+  fieldReferee Referee?    @relation("FieldReferee", fields: [fieldRefereeId], references: [id])
+  scorer       Referee?    @relation("Scorer", fields: [scorerId], references: [id])
+  events       MatchEvent[]
+}
+
+model MatchEvent {
+  id           String    @id @default(cuid())
+  fixtureId    String
+  teamId       String
+  playerId     String?
+  type         EventType
+  minute       Int
+  half         Int       @default(1)
+  playerName   String?
+  jerseyNumber Int?
+  createdAt    DateTime  @default(now())
+
+  fixture    Fixture  @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+  team       Team     @relation(fields: [teamId], references: [id])
+  player     Player?  @relation(fields: [playerId], references: [id])
+
+  @@index([fixtureId])
+  @@index([createdAt])
+}
+
+enum EventType {
+  GOAL
+  YELLOW_CARD
+  RED_CARD
+  FOUL
+}
+
+enum FixturePhase {
+  REGULAR
+  SEMI_FINAL
+  THIRD_PLACE
+  GRAND_FINAL
+}
+
+enum FixtureStatus {
+  SCHEDULED
+  LIVE
+  COMPLETED
+  FORFEITED_HOME
+  FORFEITED_AWAY
+  ABANDONED
+}
+
+// ─── Suspensions ─────────────────────────────────────────────────────────────
+
+model Suspension {
+  id             String   @id @default(cuid())
+  playerId       String
+  competitionId  String
+  fixturesBanned Int      @default(1)
+  fixturesServed Int      @default(0)
+  reason         String
+  createdAt      DateTime @default(now())
+
+  player      Player      @relation(fields: [playerId], references: [id])
+  competition Competition @relation(fields: [competitionId], references: [id])
+}
+
+// ─── Paid Sessions ───────────────────────────────────────────────────────────
+
+model FutsalSession {
+  id           String        @id @default(cuid())
+  title        String
+  description  String?
+  scheduledAt  DateTime
+  durationMins Int           @default(60)
+  capacityMax  Int
+  priceCents   Int
+  status       SessionStatus @default(OPEN)
+  createdAt    DateTime      @default(now())
+
+  bookings SessionBooking[]
+}
+
+model SessionBooking {
+  id                    String        @id @default(cuid())
+  sessionId             String
+  customerName          String
+  customerEmail         String
+  customerPhone         String?
+  participantCount      Int           @default(1)
+  stripePaymentIntentId String?       @unique
+  stripeSessionId       String?       @unique
+  status                BookingStatus @default(PENDING)
+  createdAt             DateTime      @default(now())
+
+  session FutsalSession @relation(fields: [sessionId], references: [id])
+}
+
+enum SessionStatus {
+  OPEN
+  FULL
+  CANCELLED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  REFUNDED
+}
+
+// ─── Sponsors ────────────────────────────────────────────────────────────────
+
+model Sponsor {
+  id        String      @id @default(cuid())
+  name      String
+  logoUrl   String?
+  website   String?
+  tier      SponsorTier @default(BRONZE)
+  active    Boolean     @default(true)
+  sortOrder Int         @default(0)
+  createdAt DateTime    @default(now())
+}
+
+enum SponsorTier {
+  PLATINUM
+  GOLD
+  SILVER
+  BRONZE
+}
+
+// ─── Content ─────────────────────────────────────────────────────────────────
+
+model RulesDocument {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   @db.Text
+  version     String
+  publishedAt DateTime @default(now())
+  active      Boolean  @default(true)
+}

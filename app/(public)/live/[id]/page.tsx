@@ -1,0 +1,44 @@
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { prisma } from "@/lib/prisma";
+import LiveMatchClient from "./LiveMatchClient";
+
+async function getFixture(id: string) {
+  return prisma.fixture.findUnique({
+    where: { id },
+    include: {
+      homeTeam: true,
+      awayTeam: true,
+      competition: true,
+      pitch: { include: { venue: true } },
+      events: { orderBy: { minute: "asc" }, include: { team: true } },
+    },
+  });
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const fixture = await getFixture(id);
+  if (!fixture) return {};
+
+  const score = `${fixture.homeTeam.name} ${fixture.homeScore} – ${fixture.awayScore} ${fixture.awayTeam.name}`;
+  const status = fixture.status === "LIVE" ? "🔴 LIVE" : fixture.status === "COMPLETED" ? "Full Time" : "Upcoming";
+
+  return {
+    title: `${status}: ${score}`,
+    description: `${fixture.competition.name} · ${score}`,
+    openGraph: {
+      title: `${status}: ${score}`,
+      description: `${fixture.competition.name} · Follow the action live on Wagga Futsal`,
+      type: "website",
+    },
+  };
+}
+
+export default async function LiveMatchPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const fixture = await getFixture(id);
+  if (!fixture) notFound();
+
+  return <LiveMatchClient fixture={fixture} />;
+}
