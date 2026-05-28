@@ -5,6 +5,9 @@ import { useState } from "react";
 type Referee = {
   id: string;
   phone: string | null;
+  bsb: string | null;
+  accountNumber: string | null;
+  accountName: string | null;
   user: { id: string; name: string; email: string; role: string };
   _count: { fieldRefGames: number };
 };
@@ -33,6 +36,9 @@ export default function AddRefereeForm({ onCreated }: Props) {
     const referee: Referee = {
       id: data.referee.id,
       phone: data.referee.phone,
+      bsb: data.referee.bsb ?? null,
+      accountNumber: data.referee.accountNumber ?? null,
+      accountName: data.referee.accountName ?? null,
       user: { id: data.id, name: data.name, email: data.email, role: data.role },
       _count: { fieldRefGames: 0 },
     };
