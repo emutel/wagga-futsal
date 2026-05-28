@@ -14,8 +14,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     <>
       <header className="bg-navy text-white sticky top-0 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="text-brand font-black text-xl tracking-tight">WAGGA FUTSAL</span>
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.png" alt="Wagga Futsal" width={44} height={44} className="rounded" priority />
+            <span className="text-white font-black text-lg tracking-tight hidden sm:block">WAGGA FUTSAL</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             {NAV_LINKS.map((l) => (
@@ -42,7 +43,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <footer className="bg-navy text-white/60 mt-16">
         <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <p className="text-brand font-black text-lg mb-2">WAGGA FUTSAL</p>
+            <Image src="/logo.png" alt="Wagga Futsal" width={64} height={64} className="rounded mb-2" />
             <p className="text-sm">Wagga Wagga&apos;s premier indoor futsal competition since 2012.</p>
             <p className="text-sm mt-1">
               Venues: EQUEX Multi Purpose Sports Centre &amp; Bolton Park Stadium
