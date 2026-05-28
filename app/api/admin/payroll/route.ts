@@ -90,21 +90,15 @@ export async function POST(req: Request) {
   const fieldRefRate = rate?.fieldRefCents ?? 5000;
   const scorerRate = rate?.scorerCents ?? 2500;
 
-  const payees = referees
-    .map((ref) => {
+  type Payee = { bsb: string; accountNumber: string; accountName: string; amountCents: number; reference: string };
+  const payees: Payee[] = referees
+    .flatMap((ref) => {
       const fieldRefGames = fixtures.filter((f) => f.fieldRefereeId === ref.id).length;
       const scorerGames = fixtures.filter((f) => f.scorerId === ref.id).length;
       const amountCents = fieldRefGames * fieldRefRate + scorerGames * scorerRate;
-      if (!amountCents || !ref.bsb || !ref.accountNumber || !ref.accountName) return null;
-      return {
-        bsb: ref.bsb,
-        accountNumber: ref.accountNumber,
-        accountName: ref.accountName,
-        amountCents,
-        reference: "WAGGA FUTSAL GAME FEE",
-      };
-    })
-    .filter(Boolean) as NonNullable<(typeof payees)[number]>[];
+      if (!amountCents || !ref.bsb || !ref.accountNumber || !ref.accountName) return [];
+      return [{ bsb: ref.bsb, accountNumber: ref.accountNumber, accountName: ref.accountName, amountCents, reference: "WAGGA FUTSAL GAME FEE" }];
+    });
 
   if (payees.length === 0) {
     return NextResponse.json({ error: "No payable referees with bank details in this period" }, { status: 400 });
