@@ -102,13 +102,12 @@ export default async function CompetitionPage({
                       <Link
                         href={`/teams/${f.homeTeamId}`}
                         className="font-semibold text-navy text-sm truncate flex-1 hover:text-brand hover:underline"
-                        onClick={(e) => e.stopPropagation()}
                       >
                         {f.homeTeam.name}
                       </Link>
 
                       <Link
-                        href={isLive || isPlayed ? `/live/${f.id}` : `/competition/${f.id}`}
+                        href={`/live/${f.id}`}
                         className="text-center px-4 shrink-0 hover:opacity-70"
                       >
                         {isPlayed || isLive ? (

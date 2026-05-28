@@ -30,7 +30,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             ))}
           </nav>
           <Link
-            href="/referee"
+            href="/referee/login"
             className="text-xs bg-brand hover:bg-brand-dark text-white px-3 py-1.5 rounded font-semibold transition-colors"
           >
             Referee Login
