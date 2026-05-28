@@ -1,14 +1,10 @@
-import { redirect, notFound } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ScorerConsole from "./ScorerConsole";
 
 export const dynamic = "force-dynamic";
 
 export default async function ScorerPage({ params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession();
-  if (!session) redirect("/referee/login");
-
   const { id } = await params;
 
   const fixture = await prisma.fixture.findUnique({

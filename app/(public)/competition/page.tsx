@@ -93,16 +93,24 @@ export default async function CompetitionPage({
                   const isLive = f.status === "LIVE";
                   const isPlayed = ["COMPLETED", "FORFEITED_HOME", "FORFEITED_AWAY"].includes(f.status);
                   return (
-                    <Link
+                    <div
                       key={f.id}
-                      href={isLive || isPlayed ? `/live/${f.id}` : `/competition/${f.id}`}
-                      className={`flex items-center justify-between bg-white border rounded-lg px-4 py-3 hover:border-brand transition-colors ${
+                      className={`flex items-center bg-white border rounded-lg px-4 py-3 ${
                         isLive ? "border-live" : "border-border"
                       }`}
                     >
-                      <span className="font-semibold text-navy text-sm truncate flex-1">{f.homeTeam.name}</span>
+                      <Link
+                        href={`/teams/${f.homeTeamId}`}
+                        className="font-semibold text-navy text-sm truncate flex-1 hover:text-brand hover:underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {f.homeTeam.name}
+                      </Link>
 
-                      <div className="text-center px-4 shrink-0">
+                      <Link
+                        href={isLive || isPlayed ? `/live/${f.id}` : `/competition/${f.id}`}
+                        className="text-center px-4 shrink-0 hover:opacity-70"
+                      >
                         {isPlayed || isLive ? (
                           <span className="font-black text-navy">
                             {f.homeScore} – {f.awayScore}
@@ -115,10 +123,15 @@ export default async function CompetitionPage({
                         <p className={`text-xs font-bold mt-0.5 ${isLive ? "text-live" : "text-muted"}`}>
                           {STATUS_LABELS[f.status] ?? f.status}
                         </p>
-                      </div>
+                      </Link>
 
-                      <span className="font-semibold text-navy text-sm truncate flex-1 text-right">{f.awayTeam.name}</span>
-                    </Link>
+                      <Link
+                        href={`/teams/${f.awayTeamId}`}
+                        className="font-semibold text-navy text-sm truncate flex-1 text-right hover:text-brand hover:underline"
+                      >
+                        {f.awayTeam.name}
+                      </Link>
+                    </div>
                   );
                 })}
               </div>
@@ -149,7 +162,9 @@ export default async function CompetitionPage({
                     <tr key={row.teamId} className={i < 4 ? "bg-brand/5" : ""}>
                       <td className="px-3 py-2 font-semibold text-navy">
                         <span className="text-muted text-xs mr-1">{i + 1}.</span>
-                        {row.teamName}
+                        <Link href={`/teams/${row.teamId}`} className="hover:text-brand hover:underline">
+                          {row.teamName}
+                        </Link>
                       </td>
                       <td className="px-2 py-2 text-center text-muted">{row.played}</td>
                       <td className="px-2 py-2 text-center">{row.won}</td>
