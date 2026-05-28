@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Book a Session" };
-export const revalidate = 60;
 
 export default async function SessionsPage() {
   // Show sessions that started within the last 3 hours (covers in-progress sessions)
