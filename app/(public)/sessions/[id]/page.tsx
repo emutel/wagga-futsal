@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import BookingForm from "./BookingForm";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const session = await prisma.futsalSession.findUnique({ where: { id } });

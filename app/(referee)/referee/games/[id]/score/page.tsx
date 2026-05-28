@@ -3,6 +3,8 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import ScorerConsole from "./ScorerConsole";
 
+export const dynamic = "force-dynamic";
+
 export default async function ScorerPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session) redirect("/referee/login");

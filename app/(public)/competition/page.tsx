@@ -2,7 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getStandings, getTopScorers } from "@/lib/standings";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 async function getData(compId?: string) {
   const competitions = await prisma.competition.findMany({

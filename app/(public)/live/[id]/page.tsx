@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import LiveMatchClient from "./LiveMatchClient";
 
+export const dynamic = "force-dynamic";
+
 async function getFixture(id: string) {
   return prisma.fixture.findUnique({
     where: { id },

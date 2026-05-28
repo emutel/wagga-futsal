@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getStandings } from "@/lib/standings";
 
+export const dynamic = "force-dynamic";
+
 async function getHomepageData() {
   const [upcomingFixtures, liveFixtures, competitions, sponsors] = await Promise.all([
     prisma.fixture.findMany({
