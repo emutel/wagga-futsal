@@ -1,6 +1,6 @@
 # New Client Setup Guide
 
-This codebase is the EmuSport competition management platform. It covers everything a futsal (or small-sided football) association needs to run their competition in-house — registrations, fixtures, live scoring, referee management, payroll, and paid public sessions.
+This codebase is the EmuSport competition management platform. It gives any sporting association a complete in-house system — registrations, fixtures, live scoring, official management, payroll, and paid public sessions.
 
 This guide walks through spinning up a new instance for a new client from scratch.
 
@@ -10,15 +10,15 @@ This guide walks through spinning up a new instance for a new client from scratc
 
 | Feature | Description |
 |---|---|
-| **Competition management** | Multiple competitions, age groups, seasons. Automatic draw, finals bracket. |
-| **Live scoring** | Referee portal with real-time match events (goals, cards, fouls). Public live view. |
+| **Competition management** | Multiple competitions, divisions, and seasons. Automatic draw, finals bracket. |
+| **Live scoring** | Officials portal with real-time match events (goals, cards, fouls). Public live view. |
 | **Standings & results** | Auto-calculated ladder, match history, team pages. |
 | **Player management** | Registration, bulk CSV import, suspension tracking. |
-| **Referee management** | Accounts, bank details, game fee rate card, ABA payroll download. |
-| **Paid sessions** | Stripe-powered public booking for casual/social sessions. |
-| **Rules document** | Admin-managed Markdown with PDF export. Public accordion viewer. |
+| **Official management** | Accounts, bank details, game fee rate card, ABA payroll download. |
+| **Paid sessions** | Stripe-powered public booking for casual or training sessions. |
+| **Rules document** | Admin-managed content with PDF export. Public accordion viewer. |
 | **Sponsors** | Tiered sponsor management (Platinum → Bronze) with logos. |
-| **Admin portal** | Full back-office at `/admin` — competitions, teams, fixtures, payroll, sponsors. |
+| **Admin portal** | Full back-office — competitions, teams, fixtures, payroll, sponsors. |
 
 ---
 
@@ -32,7 +32,7 @@ This guide walks through spinning up a new instance for a new client from scratc
 | Database | PostgreSQL via Prisma v7 |
 | Database host | Railway |
 | App host | Vercel |
-| Payments | Stripe (sessions booking, webhooks) |
+| Payments | Stripe (session booking, webhooks) |
 | Auth | Custom token-based (bcrypt + DB sessions, 30-day expiry) |
 | Email | Nodemailer (booking confirmations) |
 
@@ -49,7 +49,7 @@ This guide walks through spinning up a new instance for a new client from scratc
 [ ] 6. Seed the first admin user
 [ ] 7. Set up Stripe (if sessions are needed)
 [ ] 8. Configure Stripe webhook
-[ ] 9. First login — create venue, pitches, competition
+[ ] 9. First login — create venue, courts/fields, competition
 ```
 
 ---
@@ -60,11 +60,11 @@ Create a new private GitHub repo for the client. Do **not** fork publicly — us
 
 ```bash
 # Clone the template
-git clone https://github.com/emutel/wagga-futsal.git acme-futsal
-cd acme-futsal
+git clone https://github.com/emutel/wagga-futsal.git acme-sport
+cd acme-sport
 
 # Point to the new client repo
-git remote set-url origin https://github.com/emutel/acme-futsal.git
+git remote set-url origin https://github.com/emutel/acme-sport.git
 git push -u origin main
 ```
 
@@ -76,17 +76,17 @@ All branding lives in two places. No Tailwind config changes needed.
 
 ### 2a. Colours — `app/globals.css`
 
-Find the `:root` block at the top of the file. Replace the brand and navy values:
+Find the `:root` block at the top of the file and replace the brand and navy values:
 
 ```css
 :root {
   /* ✏️  Primary action colour — buttons, links, accents */
-  --color-brand:       #E91E8C;   /* e.g. change to client's main colour */
+  --color-brand:       #E91E8C;   /* replace with client's primary colour */
   --color-brand-dark:  #C0166F;   /* ~15% darker — hover states */
   --color-brand-light: #F472B6;   /* ~20% lighter — subtle fills */
 
-  /* ✏️  Dark background / text colour */
-  --color-navy:        #0D1B2E;   /* e.g. change to client's dark colour */
+  /* ✏️  Dark background / heading colour */
+  --color-navy:        #0D1B2E;   /* replace with client's dark colour */
   --color-navy-mid:    #1A2E4A;
   --color-navy-light:  #243B55;
 
@@ -100,19 +100,19 @@ Find the `:root` block at the top of the file. Replace the brand and navy values
 }
 ```
 
-**Tip:** Use a tool like [oklch.com](https://oklch.com) or [coolors.co](https://coolors.co) to generate the dark/light variants from the client's primary hex.
+**Tip:** Use [oklch.com](https://oklch.com) or [coolors.co](https://coolors.co) to generate dark/light variants from the client's primary hex.
 
 ### 2b. Logo — `public/logo.png`
 
-Replace `public/logo.png` with the client's logo. The logo is used in:
-- Admin sidebar (36×36px — keep it square or circular)
-- Public header (displayed at ~32px height)
+Replace `public/logo.png` with the client's logo. It appears in:
+- Admin sidebar (36×36px display — keep source square or circular)
+- Public header (~32px height)
 
-PNG with a transparent background works best. If it's a light logo on dark background, also check the public header — it uses `bg-navy` so it will show correctly.
+PNG with a transparent background works best. If it's a light logo, it will show correctly against the dark nav background.
 
 ### 2c. Organisation Name
 
-The organisation name is referenced in a few places. Search the codebase for `"WAGGA FUTSAL"` and `"Wagga Futsal"` and replace:
+Search for the existing organisation name and replace it throughout:
 
 ```bash
 # Find all occurrences
@@ -120,11 +120,13 @@ grep -r "Wagga Futsal\|WAGGA FUTSAL" --include="*.tsx" --include="*.ts" .
 ```
 
 Key files to update:
-- `app/(admin)/layout.tsx` — sidebar header ("WAGGA FUTSAL" + "Admin")
-- `app/(public)/layout.tsx` — public nav bar
-- `app/(public)/page.tsx` — homepage hero text
-- `app/layout.tsx` — default `<title>` metadata
-- `lib/aba.ts` — default ABA file description (if using payroll)
+
+| File | What to change |
+|---|---|
+| `app/(admin)/layout.tsx` | Sidebar header name and sub-label |
+| `app/(public)/layout.tsx` | Public nav bar name |
+| `app/(public)/page.tsx` | Homepage hero text |
+| `app/layout.tsx` | Default `<title>` metadata |
 
 ---
 
@@ -135,7 +137,7 @@ Each client gets their own isolated Railway project and PostgreSQL database.
 1. Go to [railway.app](https://railway.app) → **New Project**
 2. Add a **PostgreSQL** service
 3. Click the database → **Variables** tab → copy `DATABASE_URL`
-4. In your local `.env` (create from `.env.example`), set:
+4. In your local `.env`, set:
    ```
    DATABASE_URL=postgresql://postgres:PASSWORD@HOST:PORT/railway
    ```
@@ -143,7 +145,7 @@ Each client gets their own isolated Railway project and PostgreSQL database.
    ```bash
    npx prisma db push
    ```
-   This creates all tables. No migrations needed — `db push` is safe for new projects.
+   This creates all tables. Safe to run on a fresh database — no migrations needed.
 
 ---
 
@@ -163,7 +165,7 @@ In the Vercel dashboard for the new project, add these under **Settings → Envi
 | `SMTP_PORT` | Email provider | Booking emails only |
 | `SMTP_USER` | Email provider | Booking emails only |
 | `SMTP_PASS` | Email provider | Booking emails only |
-| `SMTP_FROM` | e.g. `noreply@acmefutsal.com.au` | Booking emails only |
+| `SMTP_FROM` | e.g. `noreply@acmesport.com.au` | Booking emails only |
 
 Apply all variables to **Production**, **Preview**, and **Development** environments.
 
@@ -175,31 +177,25 @@ Apply all variables to **Production**, **Preview**, and **Development** environm
 # Link the repo to a new Vercel project
 npx vercel --yes
 
-# Or push to GitHub and connect via Vercel dashboard
+# Or push to GitHub and connect via the Vercel dashboard
 git push origin main
 ```
 
-Vercel auto-detects Next.js. Build command is `npm run build` (which runs `prisma generate && next build`).
+Vercel auto-detects Next.js. The build command is `npm run build` (runs `prisma generate && next build`).
 
-For a **preview** (showing a client before they commit): use Vercel's preview URL — it's live immediately after deploy, no custom domain needed.
+For a **client preview** before they commit: use the Vercel preview URL — it's live immediately after deploy, no custom domain needed.
 
 ---
 
 ## Step 6 — Seed the First Admin User
 
-There's no admin signup UI (by design). Create the first admin via a one-off script:
+There is no admin signup UI by design. Create the first admin via a one-off script:
 
 ```bash
-# Set the target database
+# Set the target database first
 $env:DATABASE_URL = "postgresql://..."   # PowerShell
-# export DATABASE_URL="postgresql://..."   # bash
+# export DATABASE_URL="postgresql://..."   # bash/zsh
 
-npx tsx prisma/seed-admin.ts
-```
-
-If that script doesn't exist yet, run this directly:
-
-```bash
 npx tsx -e "
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
@@ -207,7 +203,7 @@ const prisma = new PrismaClient();
 async function main() {
   const hash = await bcrypt.hash('ChangeMe123!', 12);
   await prisma.user.create({
-    data: { name: 'Admin', email: 'admin@acmefutsal.com.au', passwordHash: hash, role: 'ADMIN' }
+    data: { name: 'Admin', email: 'admin@acmesport.com.au', passwordHash: hash, role: 'ADMIN' }
   });
   console.log('Admin created');
 }
@@ -215,20 +211,19 @@ main().finally(() => prisma.\$disconnect());
 "
 ```
 
-Then log in at `/referee/login` with those credentials. The admin portal is at `/admin`.
+Log in at `/referee/login` with those credentials. The admin portal is at `/admin`.
 
-**Change the password immediately** via the database or by adding a change-password flow.
+**Change the password immediately** after first login.
 
 ---
 
 ## Step 7 — Set Up Stripe (Sessions Only)
 
-Skip this step if the client doesn't use paid casual sessions.
+Skip this step if the client doesn't use paid public sessions.
 
-1. Create or use an existing Stripe account
-2. In **Stripe Dashboard → Products**, create a product for the session type (or let the app create payment intents dynamically — it already does this)
-3. Copy the API keys into Vercel env vars (step 4)
-4. Use **test mode keys** for the preview, switch to **live keys** before go-live
+1. Create or use an existing Stripe account for the client
+2. Copy the API keys into Vercel env vars (step 4)
+3. Use **test mode keys** for the preview; switch to **live keys** before go-live
 
 ---
 
@@ -245,62 +240,63 @@ Skip this step if the client doesn't use paid casual sessions.
 
 ## Step 9 — First Login Walkthrough
 
-Once deployed, walk the client through (or do it yourself for a preview):
+Once deployed, walk through this with the client (or set it up yourself for a demo):
 
-1. **Admin → Competitions → New** — create a competition (name, season, age group, gender)
-2. **Admin → Sessions** (under competition) — add time slots (day, time, pitch, duration)
-3. **Admin → Teams** — add teams or let them self-register
-4. **Admin → Fixtures → Generate Draw** — auto-generates round-robin fixtures
-5. **Admin → Referees** — add referee accounts
-6. **Admin → Payroll** — set game fee rate card (field ref / scorer)
-7. **Admin → Rules** — paste the competition rules (Markdown supported)
-8. **Admin → Sponsors** — add sponsor logos and tier
+1. **Admin → Competitions → New** — create a competition (name, season, division, gender)
+2. **Admin → Fixtures → Time Slots** — add schedule slots (day, time, court/field, duration)
+3. **Admin → Teams** — add teams manually or via CSV import
+4. **Admin → Players** — bulk import via CSV if available
+5. **Admin → Fixtures → Generate Draw** — auto-generates round-robin fixtures
+6. **Admin → Officials** — add official accounts (they get a login for the scoring portal)
+7. **Admin → Payroll** — set the game fee rate card (field official / scorer)
+8. **Admin → Rules** — paste the competition rules (Markdown supported, PDF export included)
+9. **Admin → Sponsors** — upload sponsor logos and assign tiers
 
 ---
 
 ## Branding Quick Reference
 
-| Thing to change | File | What to edit |
+| What to change | File | What to edit |
 |---|---|---|
-| Brand colour | `app/globals.css` | `--color-brand` and variants |
+| Primary colour | `app/globals.css` | `--color-brand` and variants |
 | Dark colour | `app/globals.css` | `--color-navy` and variants |
-| Logo | `public/logo.png` | Replace file (keep square PNG) |
+| Logo | `public/logo.png` | Replace file (square PNG, transparent bg) |
 | Org name (admin) | `app/(admin)/layout.tsx` | Hardcoded in sidebar |
 | Org name (public) | `app/(public)/layout.tsx` | Hardcoded in nav |
-| Homepage hero | `app/(public)/page.tsx` | Headline + subtext |
+| Homepage hero | `app/(public)/page.tsx` | Headline and subtext |
 | Page title prefix | `app/layout.tsx` | `metadata.title.template` |
-| ABA org name | Admin → Payroll | Set in the payroll form (persisted to DB) |
+| Payroll org name | Admin → Payroll | Set in the payroll form (saved to database) |
 
 ---
 
 ## Common Issues
 
 **Build fails on Vercel**
-- Check `DATABASE_URL` is set in all environments
-- Run `npx prisma generate` locally to catch schema errors before pushing
+- Check `DATABASE_URL` is set in all three environments (Production, Preview, Development)
+- Run `npx prisma db push` locally against the new DB before deploying
 
 **"Unauthorized" on admin pages**
-- Session cookie not set — log in again
+- Session cookie not set — log in again at `/referee/login`
 - Check `AUTH_SECRET` is set in Vercel env vars
 
-**Sessions not showing on public site**
+**Sessions not showing on the public site**
 - Status must be `OPEN` or `FULL`
-- `scheduledAt` must be in the future (or within 3 hours of now for in-progress)
+- `scheduledAt` must be in the future (or within 3 hours past, for in-progress sessions)
 
 **Stripe payments not confirming**
 - Webhook not configured, or `STRIPE_WEBHOOK_SECRET` is wrong
-- Check Vercel logs at `/api/webhooks/stripe`
+- Check Vercel function logs for `/api/webhooks/stripe`
 
-**Referee can't log in**
-- Their account must have `role: REFEREE` — created via Admin → Referees
+**Official can't log in**
+- Their account must have `role: REFEREE` — create via Admin → Officials
 
 ---
 
 ## Per-Client Effort Estimate
 
-| Scope | Time |
+| Scope | Estimated time |
 |---|---|
 | Branding only (colours + logo + name) | ~30 min |
 | Full setup (DB + Vercel + Stripe + seed) | ~2 hours |
-| Initial data entry (competitions, teams, fixtures) | 1–2 hours (varies) |
-| Custom domain + DNS | 15 min |
+| Initial data entry (competitions, teams, fixtures) | 1–3 hours (varies by size) |
+| Custom domain + DNS | ~15 min |
