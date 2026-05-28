@@ -1,0 +1,223 @@
+"use client";
+
+import { useState } from "react";
+
+type Player = { id: string; firstName: string; lastName: string };
+type TeamPlayer = { id: string; playerId: string; jerseyNumber: number | null; player: Player };
+type CompetitionRef = { id: string; name: string; season: string };
+type CompetitionTeam = { id: string; teamId: string; competition: CompetitionRef };
+
+type Team = {
+  id: string;
+  name: string;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  _count: { players: number };
+  competitions: CompetitionTeam[];
+  players: TeamPlayer[];
+};
+
+type Competition = { id: string; name: string; season: string };
+
+export default function TeamRow({
+  team,
+  allPlayers,
+  allCompetitions,
+  onUpdated,
+  onDeleted,
+}: {
+  team: Team;
+  allPlayers: Player[];
+  allCompetitions: Competition[];
+  onUpdated: (t: Team) => void;
+  onDeleted: (id: string) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [addPlayerForm, setAddPlayerForm] = useState({ playerId: "", jerseyNumber: "" });
+  const [addCompForm, setAddCompForm] = useState(allCompetitions[0]?.id ?? "");
+  const [playerSaving, setPlayerSaving] = useState(false);
+  const [compSaving, setCompSaving] = useState(false);
+  const [playerError, setPlayerError] = useState("");
+  const [compError, setCompError] = useState("");
+
+  const handleAddPlayer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addPlayerForm.playerId) return;
+    setPlayerSaving(true);
+    setPlayerError("");
+    const res = await fetch(`/api/admin/teams/${team.id}/players`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ playerId: addPlayerForm.playerId, jerseyNumber: addPlayerForm.jerseyNumber || null }),
+    });
+    const data = await res.json();
+    setPlayerSaving(false);
+    if (!res.ok) { setPlayerError(data.error ?? "Failed"); return; }
+    onUpdated({
+      ...team,
+      players: [...team.players, data],
+      _count: { players: team._count.players + 1 },
+    });
+    setAddPlayerForm({ playerId: "", jerseyNumber: "" });
+  };
+
+  const handleRemovePlayer = async (playerId: string) => {
+    await fetch(`/api/admin/teams/${team.id}/players?playerId=${playerId}`, { method: "DELETE" });
+    onUpdated({
+      ...team,
+      players: team.players.filter((p) => p.playerId !== playerId),
+      _count: { players: team._count.players - 1 },
+    });
+  };
+
+  const handleAddToComp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addCompForm) return;
+    setCompSaving(true);
+    setCompError("");
+    const res = await fetch(`/api/admin/teams/${team.id}/competitions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ competitionId: addCompForm }),
+    });
+    const data = await res.json();
+    setCompSaving(false);
+    if (!res.ok) { setCompError(data.error ?? "Failed"); return; }
+    onUpdated({ ...team, competitions: [...team.competitions, data] });
+  };
+
+  const handleDelete = async () => {
+    if (!confirm(`Delete team "${team.name}"?`)) return;
+    await fetch(`/api/admin/teams/${team.id}`, { method: "DELETE" });
+    onDeleted(team.id);
+  };
+
+  const availablePlayers = allPlayers.filter(
+    (p) => !team.players.some((tp) => tp.playerId === p.id)
+  );
+  const availableComps = allCompetitions.filter(
+    (c) => !team.competitions.some((tc) => tc.competition.id === c.id)
+  );
+
+  return (
+    <div className="border-b border-border last:border-b-0">
+      <div
+        className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer"
+        onClick={() => setExpanded((v) => !v)}
+      >
+        <div>
+          <span className="font-semibold text-navy text-sm">{team.name}</span>
+          <span className="ml-2 text-xs text-muted">{team._count.players} players</span>
+          {team.competitions.length > 0 && (
+            <span className="ml-2 text-xs text-muted">
+              · {team.competitions.map((c) => c.competition.name).join(", ")}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+          <button onClick={handleDelete} className="bg-red-500 text-white px-3 py-1.5 rounded text-xs hover:bg-red-600">
+            Delete
+          </button>
+          <span className="text-muted text-sm select-none">{expanded ? "▲" : "▼"}</span>
+        </div>
+      </div>
+
+      {expanded && (
+        <div className="px-4 pb-4 bg-gray-50 border-t border-border">
+          {/* Contact info */}
+          {(team.contactEmail || team.contactPhone) && (
+            <p className="text-xs text-muted mt-2">
+              {team.contactEmail && <span>{team.contactEmail}</span>}
+              {team.contactEmail && team.contactPhone && <span> · </span>}
+              {team.contactPhone && <span>{team.contactPhone}</span>}
+            </p>
+          )}
+
+          {/* Player roster */}
+          <div className="mt-3">
+            <p className="text-xs font-bold text-navy uppercase tracking-wide mb-2">Players</p>
+            {team.players.length === 0 ? (
+              <p className="text-xs text-muted mb-2">No players yet.</p>
+            ) : (
+              <table className="text-xs w-full mb-2">
+                <thead>
+                  <tr className="text-left text-muted">
+                    <th className="pb-1 font-semibold">Name</th>
+                    <th className="pb-1 font-semibold w-16">#</th>
+                    <th className="pb-1 w-12"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {team.players.map((tp) => (
+                    <tr key={tp.id}>
+                      <td className="py-1">{tp.player.firstName} {tp.player.lastName}</td>
+                      <td className="py-1 text-muted">{tp.jerseyNumber ?? "—"}</td>
+                      <td className="py-1">
+                        <button
+                          onClick={() => handleRemovePlayer(tp.playerId)}
+                          className="text-red-500 hover:text-red-700 text-xs"
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            {availablePlayers.length > 0 && (
+              <form onSubmit={handleAddPlayer} className="flex gap-2 items-center flex-wrap mt-1">
+                <select
+                  value={addPlayerForm.playerId}
+                  onChange={(e) => setAddPlayerForm((f) => ({ ...f, playerId: e.target.value }))}
+                  className="border border-border rounded px-2 py-1.5 text-xs focus:outline-none"
+                >
+                  <option value="">Select player…</option>
+                  {availablePlayers.map((p) => (
+                    <option key={p.id} value={p.id}>{p.firstName} {p.lastName}</option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  placeholder="Jersey #"
+                  value={addPlayerForm.jerseyNumber}
+                  onChange={(e) => setAddPlayerForm((f) => ({ ...f, jerseyNumber: e.target.value }))}
+                  className="border border-border rounded px-2 py-1.5 text-xs w-20 focus:outline-none"
+                />
+                <button type="submit" disabled={playerSaving || !addPlayerForm.playerId}
+                  className="bg-brand text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-brand-dark disabled:opacity-60">
+                  {playerSaving ? "Adding…" : "Add Player"}
+                </button>
+                {playerError && <span className="text-xs text-red-600">{playerError}</span>}
+              </form>
+            )}
+          </div>
+
+          {/* Add to competition */}
+          {availableComps.length > 0 && (
+            <div className="mt-4">
+              <p className="text-xs font-bold text-navy uppercase tracking-wide mb-2">Add to Competition</p>
+              <form onSubmit={handleAddToComp} className="flex gap-2 items-center flex-wrap">
+                <select
+                  value={addCompForm}
+                  onChange={(e) => setAddCompForm(e.target.value)}
+                  className="border border-border rounded px-2 py-1.5 text-xs focus:outline-none"
+                >
+                  {availableComps.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name} ({c.season})</option>
+                  ))}
+                </select>
+                <button type="submit" disabled={compSaving}
+                  className="bg-brand text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-brand-dark disabled:opacity-60">
+                  {compSaving ? "Adding…" : "Add to Competition"}
+                </button>
+                {compError && <span className="text-xs text-red-600">{compError}</span>}
+              </form>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
