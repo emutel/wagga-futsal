@@ -115,9 +115,6 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
           ← Back to Competitions
         </Link>
         <h1 className="text-4xl font-black text-navy">{team.name}</h1>
-        <p className="text-muted mt-1">
-          {team.ageGroup} · {team.gender}
-        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
