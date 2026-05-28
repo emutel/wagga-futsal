@@ -52,14 +52,30 @@ model Player {
 }
 
 model Referee {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  phone     String?
-  createdAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  phone         String?
+  bsb           String?
+  accountNumber String?
+  accountName   String?
+  createdAt     DateTime @default(now())
 
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   fieldRefGames   Fixture[] @relation("FieldReferee")
   scorerGames     Fixture[] @relation("Scorer")
+}
+
+model PayRate {
+  id            String   @id @default(cuid())
+  fieldRefCents Int      @default(5000)
+  scorerCents   Int      @default(2500)
+  orgBsb        String?
+  orgAccount    String?
+  orgName       String?
+  orgBank       String?
+  orgApcaId     String?
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
 }
 
 enum Gender {
