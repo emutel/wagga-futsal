@@ -44,7 +44,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <Image src="/logo.png" alt="FOOTBALL WAGGA WAGGA" width={64} height={64} className="rounded mb-2" />
-            <p className="text-sm">Wagga Wagga&apos;s premier indoor futsal competition since 2012.</p>
+            <p className="text-sm">Wagga Wagga&apos;s premier football association — Est. 2012.</p>
             <p className="text-sm mt-1">
               Venues: EQUEX Multi Purpose Sports Centre &amp; Bolton Park Stadium
             </p>

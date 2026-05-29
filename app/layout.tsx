@@ -7,7 +7,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   title: { default: "FOOTBALL WAGGA WAGGA", template: "%s | FOOTBALL WAGGA WAGGA" },
-  description: "Wagga Wagga's premier indoor futsal competition — Est. 2012",
+  description: "Wagga Wagga's premier football association — Est. 2012",
   openGraph: {
     siteName: "FOOTBALL WAGGA WAGGA",
     type: "website",

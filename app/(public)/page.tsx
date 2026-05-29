@@ -100,7 +100,7 @@ export default async function HomePage() {
               WAGGA <span className="text-brand">FUTSAL</span>
             </h1>
             <p className="text-white/70 text-lg mb-8 max-w-xl">
-              Indoor futsal for all ages — from Under 8s to Opens. Register now and join the
+              Football for all ages — from Under 5s to Opens. Register now and join the
               competition.
             </p>
             <div className="flex flex-wrap gap-4 justify-center md:justify-start">
