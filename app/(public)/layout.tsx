@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { href: "/competition", label: "Competitions" },
   { href: "/sessions", label: "Book a Session" },
   { href: "/rules", label: "Rules" },
+  { href: "/venues", label: "Venues" },
   { href: "/gallery", label: "Gallery" },
   { href: "/sponsors", label: "Sponsors" },
 ];
