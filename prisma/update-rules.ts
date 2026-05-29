@@ -17,107 +17,32 @@ Competitions are covered under these guidelines.
 
 ## 2. Match Balls
 
-- 2.1 Match balls will be Deploy Futsal Balls. Balls used for Finals Series must bear the official logo 'FIFA approved' or 'FIFA inspected'.
-- 2.2 Size 3 match balls are to be used for all age groups up to and including Under 12s. Size 4 match balls are to be used for all other age groups including open age.
+- 2.1 Only balls authorised by Football NSW are to be used.
+- 2.2 Size 3 match balls are to be used for all age groups up to and including Under 9s.
 - 2.3 FOOTBALL WAGGA shall supply all Match Balls.
 
 ## 3. Identification and Registration
 
-- 3.1 ALL players must be registered with FFA and their requisite State Federation as a Futsal player for the 2025/2026 season in order to participate in the competition.
-- 3.2 Upon request of match officials, players must provide valid photo identification. Where a player is unable to produce proof of identification, the matter will be reported to the Competition Coordinator who will subsequently take the appropriate decision against the player and team involved.
+- 3.1 ALL players must be registered through PlayFootball (Football NSW) for the 2026 season in order to participate in the competition.
 
 ## 4. Compulsory Equipment
 
-### 4.1 Basic Uniform
-
-**Playing Uniforms must be independent of any Football Wagga Wagga or Football Australia associated club. This includes Football New South Wales (FNSW) attire, Capital Football attire, Wagga City Wanderers attire and any attire that is associated with any club.**
-
-- 4.1.2 Playing shorts must be matching. If undershorts are worn, they must be the same colour as the playing shorts.
-- 4.1.3 Goal Keepers must wear uniforms that clearly contrast with the rest of the team, the opposing team and the referee.
-- 4.1.4 All Playing shirts must be **CLEARLY** numbered on the back. No two shirts may display the same number. Numbers must be permanently fixed to the back of the shirt; use of tape is not permitted. No un-numbered bibs will be allowed.
-- 4.1.5 Teams are not to have uniforms that clash with referee uniforms.
-- 4.1.6 Matching long socks must be worn by all team members. Socks must cover the shin pads entirely.
-- 4.1.7 Shin pads must be worn. Shin pads must comply with Law 4 of the FIFA Laws of the Game — made of rubber, plastic or a similar approved material and must provide a reasonable degree of protection by covering the shins.
-- 4.1.8 Non-marking shoes must be worn at all times.
-- 4.1.9 Where the colours of both teams are sufficiently similar it is the responsibility of the second listed team on the draw to change into an alternate coloured strip, with numbers, or use the numbered bibs provided by FOOTBALL WAGGA ONLY.
-
-### 4.3 Jewellery
-
-- 4.3.1 As per Law 4 of the FIFA Laws of the Game the wearing of jewellery is not permitted.
-- 4.3.2 Official Medic Alert bracelets and necklaces are the only jewellery approved to be worn. All Medic Alert bracelets and necklaces must be securely taped to the body and the referees informed of them being worn prior to the game.
-- 4.3.3 **NO TAPING of piercings is permitted in any FOOTBALL WAGGA Competition.**
+- Players should not wear anything which is dangerous to another player. This includes jewellery and plaster/plastic casts.
+- Boots or training shoes must be worn at all times.
+- Shin pads, fully covered with socks, must be worn.
 
 ## 5. Referees
 
-During the Regular FOOTBALL WAGGA Season all league competition games will be refereed by 1 (one) referee with the aid of a timekeeper. ONLY in the finals series will 2 (two) referees be appointed to officiate the games, along with a timekeeper.
-
-### 5.1 Appointments
-
-- 5.1.1 Unless otherwise decided, the appointment of referees will be made by the FOOTBALL WAGGA Competition Managers, namely Samuel Gray or Amanda Gray.
-
-### 5.2 Persons not to approach referee
-
-- 5.2.1 With the exemption of team manager/captains carrying out the requirements of Rule 12 (Match Sheets) no person may approach the referee at the end of a game for any purpose whatsoever without his or her consent.
-
-### 5.5 Decisions of the referees
-
-The decisions of the referee(s) regarding facts connected with play, including whether or not a goal is scored and the result of the match, are final.
-
-## 7. Eligibility
-
-### 7.1 Age-Based Competitions
-
-No player may play for any team unless he/she is correctly registered with the appropriate Federation in line with registration guidelines (Rule 3.1).
-
-### 7.2 Age Groups
-
-| Age Group | Minimum Age | Maximum Birth Date |
-|---|---|---|
-| Under 8s | 5 years | On or after 1 January 2017 |
-| Under 10s | 8 years | On or after 1 January 2015 |
-| Under 12s | 9 years | On or after 1 January 2013 |
-| Under 14s | 11 years | On or after 1 January 2011 |
-| Under 16s | 13 years | On or after 1 January 2009 |
-| Under 19s, Opens & Social | 16 years | On or after 1 January 2004 |
-
-*Players are NOT permitted to play in an age group lower than that in which they register, regardless of the fact that they may be eligible.*
-
-*A player may only play in an age group higher than their registered age group if they meet the minimum age requirement AND if a consent form has been completed by their parent/guardian and submitted and approved by FOOTBALL WAGGA. NO EXCEPTIONS.*
-
-- 7.4 Male players are not permitted to play in female only competitions.
-- 7.5 Female players playing in mixed or open competitions are permitted to play down one (1) age group below their defined age group with the approval of FOOTBALL WAGGA.
+- Under 5/6/7: No referees. A 'Game Leader' from each team (usually the Coach) may be on the field to assist players.
+- Under 8/9: Instructing referees, usually children aged 11–13, help ensure the game is played in a fluent manner with minimal stoppages.
 
 ## 8. Draws
 
-- 8.1 Draws for the competition will be e-mailed to competing teams and published on the FOOTBALL WAGGA website.
-- 8.2 Draws are subject to change at late notice. FOOTBALL WAGGA will endeavour to contact all teams affected by such changes.
-- 8.3 Teams are responsible for checking the draw regularly prior to their matches to ensure they are aware of any draw changes.
+- 8.1 Draws are published on the FOOTBALL WAGGA website.
+- 8.2 Draws are subject to change. FOOTBALL WAGGA will endeavour to contact all teams affected.
+- 8.3 Teams are responsible for checking the draw regularly prior to their matches.
 
 ## 10. Conduct of Games
-
-### 10.4 Tackling
-
-- 10.4.1 In no circumstances are players allowed to tackle from behind. Even if the tackle is seen as a clean possession a direct free kick will be awarded to the opposition.
-- 10.4.2 **Under no circumstances are players allowed to slide tackle.** A slide tackle will result in an instant card (yellow or red) at the referee's discretion. The goalkeeper is allowed to slide along the ground, so long as the slide is within the goal area.
-
-### 10.5 Goalkeepers
-
-- 10.5.1 The goalkeeper CAN throw the ball to the halfway line as long as they do so from their own goal area and within the four (4) seconds allotted for restarts.
-- 10.5.3 The goalkeeper has a 4 second time limit to release the ball.
-- 10.5.4 Goalkeepers are **NOT** allowed to pick up a pass from any of their team mates (back pass).
-- 10.5.5 Once a goalkeeper has released the ball from their possession, the ball CANNOT be played back to the keeper unless the ball has been touched by an opposing player (2 touch rule).
-
-### 10.6 Game Duration
-
-- **Under 8/10/12:** 2 × 13-minute halves, 1-minute half-time break
-- **Under 14/16:** 2 × 15-minute halves, 1-minute half-time break
-- **Under 19s, Opens & Social:** 2 × 20-minute halves, 3-minute half-time break
-
-**THERE WILL BE NO TIME ADDED ON AT THE END OF EITHER HALF, UNLESS A SERIOUS INJURY OCCURS AND THIS IS AT THE DISCRETION OF THE REFEREE IN CHARGE.**
-
-### 10.7 Pitches
-
-Pitches shall be the indoor pitches at EQUEX Multi Purpose Sports Centre OR Bolton Park Stadium, Wagga Wagga OR at a nominated FOOTBALL WAGGA Venue.
 
 ### 10.8 Points Allocation
 
@@ -125,97 +50,136 @@ Pitches shall be the indoor pitches at EQUEX Multi Purpose Sports Centre OR Bolt
 - 1 point for a draw
 - 0 points for a loss or bye
 
-## 11. Points Table
-
-At the completion of the competition round robin matches, the points table placement will be determined by:
-
-1. Points accrued
-2. Goal difference (if equal on points)
-3. Goals for (if still equal)
-4. Head-to-head result (if still equal)
-5. Coin toss (if still equal)
-
-## 12. Match Sheets
-
-All match sheets will be provided by FOOTBALL WAGGA.
-
-- 12.1 It is the responsibility of the respective teams to ensure that match sheets are correct and include all player's names and shirt numbers prior to the start of the game.
-- 12.2 Only players correctly listed on the match sheet at the start of play will be permitted to participate.
-- 12.3 Should a player take the pitch that is not listed on the match card prior to the commencement of the game, this will result in a loss of one goal to the opposition.
-- 12.9 Match sheet must be signed by a representative of each team at the conclusion of the game. If left unsigned this may result in a turnover of the result.
-
-## 13. Late Start
-
-- 13.1 Teams not ready to kick off at the scheduled time will immediately be penalised one goal and a further goal for every 2 (two) minutes that they are late.
-- 13.2 If a team is not ready to kick off after five minutes past the scheduled kick off time the team will be considered to have forfeited the game.
-
-## 14. Rescheduling of Matches
-
-- 14.1 Rescheduling of matches by teams will not be permitted.
-
 ## 15. Forfeiture of Games
 
 - 15.1 Teams must notify FOOTBALL WAGGA at least 24 hours prior to their game of their intention to forfeit.
-- 15.2 Notification of forfeiture must be in writing, either via e-mail or by hand.
 - 15.3 Forfeiture of games will result in a score-line of **5–0** being recorded against the forfeiting team.
-- 15.4 Teams forfeiting twice in a single season may be removed from the competition, with no refund of fees.
-
-## 16. Abandonment of Games
-
-- 16.1 An abandoned game as a result of player, spectator, or team official's conduct will result in the awarding of a 5–0 result against the offending team.
-- 16.5 Where abandonment is due to circumstances beyond the control of the referee (unsafe conditions, power failure, etc.), neither team will be penalised and the game will recommence once conditions are deemed satisfactory within 30 minutes.
-- 16.7 If games are unable to recommence within 30 minutes, games will be deemed a 1–1 draw.
-
-## 17. Minimum Number of Players
-
-- 17.1 Any team that has less than three (3) players on the pitch either before or during the match will be considered to have forfeited the game.
-- 17.2 A minimum of 3 players are required on pitch to commence a game.
-
-## 20. Substitution Procedure
-
-- 20.1 A substitution may be made at any time, whether the ball is in play or not.
-- 20.2 The player leaves the pitch via his own team's substitution zone. The substitute only enters the pitch after the player being replaced has left.
-
-## 22. Borrowing of Players
-
-- 22.1 Players cannot be borrowed from another team in the same competition in which they are playing.
-- 22.2 Players cannot be borrowed at any time to fulfil fixtures.
-
-## 24. Yellow and Red Cards and Suspensions
-
-### 24.1 Yellow Cards
-
-- If a player accrues **3 yellow cards** in the competition, that player shall serve an automatic one (1) match ban in the next scheduled match.
-- All yellow cards continue from the regular season through into the finals series.
-
-### 24.2 Red Cards
-
-- Any player who receives a red card in a match must serve an automatic **one (1) match ban** in the next scheduled match in that competition.
-- The suspension may be increased, dependent on the offence.
-
-### 24.3 Suspensions
-
-- Any player who receives a suspension must serve that suspension in the next scheduled round for all competitions until the suspension is served completely.
-- If a player is suspended in one age group they cannot play in a different age group until their suspension is completed.
-
-## 25. Injured Players
-
-- 25.1 Stoppage for an injury must be resolved within 2 minutes. If possible, the injured player should be removed from the court within this time. Teams unable to resume play are deemed to have forfeited. Coaches must ensure all injuries for their players are noted on the Incident Log at the front desk.
 
 ---
 
-## Appendix 1 — Additional Court Fees for Playing Two Competitions
+# MiniRoos Guidelines
 
-| First Age Group | Second Age Group | Additional Court Fees |
-|---|---|---|
-| Under 8 | Under 10 | $130 |
-| Under 10 | Under 12 | $130 |
-| Under 12 | Under 14 | $130 |
-| Under 14 | Under 16 | $130 |
-| Under 16 | Opens | $130 |
-| Under 19 | Opens | $130 |
+## Under 5, 6 and 7 Guidelines
 
-Payment: FOOTBALL WAGGA Pty Ltd · Westpac Bank · BSB: 732769 · Account: 927477. Reference: Player Name + Pitch Fees.
+**Ball Size: 3**
+
+### 1. Number of Players
+4 players (no goalkeeper) plus up to 3 interchange players. Interchange is encouraged to provide each player with equal time. A 'Game Leader' from each team, usually the Coach, may be on the field to assist players in fair and correct play. **There are no referees.**
+
+### 2. Players Equipment
+Players should not wear anything dangerous to another player. This includes jewellery and plaster/plastic casts. Boots or training shoes must be worn at all times. Shin pads, fully covered with socks, must be worn.
+
+### 3. Duration of Game
+2 x 20-minute halves. Half time break of 5 minutes.
+
+### 4. Start of Play
+Game Leaders are to agree who kicks off. A kick forward to a team mate from the middle of the halfway line begins the match. Opposition players must be at least 5m from the ball. The ball must touch a team mate before a goal can be scored.
+
+### 5. Ball In and Out of Play
+**Ball over Side Line:** Restarted by a kick or dribble from behind the side line by the team that did not last touch the ball. The ball must be touched by another player before a goal can be scored.
+
+**Ball over Back Line:** No corner kick or goal kick. A player from the defending team takes a kick from anywhere behind the goal line. Opponents must go back behind the halfway line and can only move after the ball has been kicked into play.
+
+### 6. No Offside
+There is no offside.
+
+### 7. Methods of Scoring
+A goal is scored when the whole of the ball crosses the goal line and enters the goal. A goal cannot be scored directly from a kick-off or restart of play.
+
+### 8. Fouls and Misconduct
+Generally at this age, fouls are due to lack of co-ordination and are not deliberate. Game leaders should try to give advantage to the opposing team.
+
+### 9. Free Kicks
+All free kicks are indirect — the ball must touch another player before a goal can be scored. Opposing players must be 5 metres from the ball.
+
+### 10. Encouraging Fair Play
+If an individual scores 3 goals, they may only score another goal after one of their team mates has scored. Frequent interchange is encouraged so all players have equal playing time.
+
+### 11. Spectator Lines
+All spectators must remain behind the spectator line.
+
+---
+
+## Under 8 and 9 Guidelines
+
+**Ball Size: 3**
+
+### 1. Number of Players
+7 players (including a goalkeeper) plus up to 3 interchange players.
+
+### 2. Players Equipment
+Players should not wear anything dangerous to another player. Boots or training shoes must be worn at all times. Shin pads, fully covered with socks, must be worn. Goalkeepers should wear a different coloured shirt to their team.
+
+### 3. Duration of Game
+2 x 20-minute halves. Half time break of 5 minutes.
+
+### 4. Start of Play
+Instructing referee will toss a coin to decide who kicks off. Opposition players must be at least 5m from the ball. The ball must touch a team mate before a goal can be scored.
+
+### 5. Ball In and Out of Play
+**Ball over Side Line:** Throw in from behind the side line by the team that did not last touch the ball. Opposition players should be 5m from the thrower.
+
+**Ball over Back Line (defending team last touch):** Corner kick. Opposition players should be 5m from the ball.
+
+**Ball over Back Line (attacking team last touch):** Goal kick from anywhere inside the penalty area. Opposition players should be 5m outside the penalty area.
+
+### 6. No Offside
+There is no offside.
+
+### 7. Methods of Scoring
+A goal is scored when the whole of the ball crosses the goal line and enters the goal. A goal cannot be scored directly from a kick-off or restart of play.
+
+### 8. Goalkeepers
+Keepers may handle the ball anywhere inside the penalty area. Keepers are not to 'drop kick' the ball from their hands. After a save the keeper may throw, roll or place the ball on the floor and kick it into play. Opposition players must move 5m outside the area.
+
+### 9. Fouls and Misconduct
+Generally at this age, fouls are due to lack of co-ordination and are not deliberate. The referee should try to give advantage to the opposing team.
+
+### 10. Free Kicks
+All free kicks are indirect. Opposing players must be 5 metres from the ball.
+
+### 11. Encouraging Fair Play
+If an individual scores 3 goals, they may only score another goal after one of their team mates has scored. Frequent interchange is encouraged.
+
+### 12. Spectator Lines
+All spectators must remain behind the spectator line.
+
+### 13. Instructing Referees
+Referees are usually children aged 11–13. Their role is to ensure the game is played in a fluent manner with minimal whistle blowing. They assist with correct throw ins, goal kicks, free kicks etc.
+
+---
+
+## Under 10 and 11 Guidelines
+
+**Ball Size: 3**
+
+### 1. Number of Players
+7 players (including a goalkeeper) plus up to 3 interchange players.
+
+### 2. Players Equipment
+Players should not wear anything dangerous to another player. Boots or training shoes must be worn at all times. Shin pads, fully covered with socks, must be worn. Goalkeepers should wear a different coloured shirt to their team.
+
+### 3. Duration of Game
+2 x 25-minute halves. Half time break of 5 minutes.
+
+### 4. Offside
+Offside applies in Under 10 and 11 competitions.
+
+### 5. Goalkeepers
+Keepers may handle the ball anywhere inside the penalty area. Keepers are not to 'drop kick' the ball from their hands. After a save the keeper may throw, roll or place the ball on the floor and kick it into play.
+
+### 6. Free Kicks
+All free kicks are indirect. Opposing players must be 5 metres from the ball.
+
+### 7. Encouraging Fair Play
+Frequent interchange is encouraged so all players have equal playing time.
+
+### 8. Spectator Lines
+All spectators must remain behind the spectator line.
+
+---
+
+*These guidelines follow the Football Australia MiniRoos framework as adopted by Football Wagga Wagga for the 2026 season.*
 `;
 
 async function main() {
@@ -227,10 +191,10 @@ async function main() {
     await prisma.rulesDocument.update({
       where: { id: existing.id },
       data: {
-        title: "FOOTBALL WAGGA Competition Rules 2025–2026",
+        title: "FOOTBALL WAGGA Competition Rules & MiniRoos Guidelines 2026",
         content: RULES_CONTENT,
-        version: "1.1",
-        publishedAt: new Date("2025-07-01"),
+        version: "1.2",
+        publishedAt: new Date("2026-01-01"),
         active: true,
       },
     });
@@ -238,10 +202,10 @@ async function main() {
   } else {
     await prisma.rulesDocument.create({
       data: {
-        title: "FOOTBALL WAGGA Competition Rules 2025–2026",
+        title: "FOOTBALL WAGGA Competition Rules & MiniRoos Guidelines 2026",
         content: RULES_CONTENT,
-        version: "1.1",
-        publishedAt: new Date("2025-07-01"),
+        version: "1.2",
+        publishedAt: new Date("2026-01-01"),
         active: true,
       },
     });
