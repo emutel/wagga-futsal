@@ -11,9 +11,9 @@ export default async function RefereeProtectedLayout({ children }: { children: R
     <div className="min-h-screen bg-gray-50">
       <header className="bg-navy text-white px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Image src="/logo.png" alt="FOOTBALL WAGGA" width={36} height={36} className="rounded" />
+          <Image src="/logo.png" alt="FOOTBALL WAGGA WAGGA" width={36} height={36} className="rounded" />
           <div>
-            <p className="font-black text-white text-sm leading-tight">FOOTBALL WAGGA</p>
+            <p className="font-black text-white text-sm leading-tight">FOOTBALL WAGGA WAGGA</p>
             <p className="text-white/60 text-xs">Referee Portal</p>
           </div>
         </div>

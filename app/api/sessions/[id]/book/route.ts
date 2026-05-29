@@ -35,7 +35,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
           currency: "aud",
           product_data: {
             name: session.title,
-            description: `FOOTBALL WAGGA session — ${participants} participant${participants > 1 ? "s" : ""}`,
+            description: `FOOTBALL WAGGA WAGGA session — ${participants} participant${participants > 1 ? "s" : ""}`,
           },
           unit_amount: session.priceCents,
         },

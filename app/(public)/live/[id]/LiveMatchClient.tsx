@@ -67,7 +67,7 @@ export default function LiveMatchClient({ fixture: initial }: { fixture: Fixture
     if (navigator.share) {
       navigator.share({
         title: `${fixture.homeTeam.name} vs ${fixture.awayTeam.name}`,
-        text: `${fixture.homeTeam.name} ${fixture.homeScore} – ${fixture.awayScore} ${fixture.awayTeam.name} | FOOTBALL WAGGA`,
+        text: `${fixture.homeTeam.name} ${fixture.homeScore} – ${fixture.awayScore} ${fixture.awayTeam.name} | FOOTBALL WAGGA WAGGA`,
         url: shareUrl,
       });
     } else {

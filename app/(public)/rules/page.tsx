@@ -37,7 +37,7 @@ export default async function RulesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
         <div>
-          <p className="text-brand text-xs font-bold uppercase tracking-widest mb-1">FOOTBALL WAGGA</p>
+          <p className="text-brand text-xs font-bold uppercase tracking-widest mb-1">FOOTBALL WAGGA WAGGA</p>
           <h1 className="text-4xl font-black text-navy leading-tight">Competition Rules</h1>
           {doc && (
             <p className="text-muted text-sm mt-2">
