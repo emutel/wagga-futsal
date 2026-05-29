@@ -88,6 +88,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
   const standings = activeCompetition
     ? await getStandings(activeCompetition.competition.id)
     : [];
+  const isMiniRoos = ["U5","U6","U7","U8","U9"].includes(activeCompetition?.competition.ageGroup ?? "");
   const teamStanding = standings.find((s) => s.teamId === id);
   const teamPosition = standings.findIndex((s) => s.teamId === id) + 1;
 
@@ -200,9 +201,11 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                         </div>
                       </div>
                       <div className="text-right shrink-0 ml-4">
-                        <p className="font-black text-xl text-navy">
-                          {myScore}–{oppScore}
-                        </p>
+                        {!isMiniRoos && (
+                          <p className="font-black text-xl text-navy">
+                            {myScore}–{oppScore}
+                          </p>
+                        )}
                         <p className="text-xs text-muted">
                           {new Date(f.scheduledAt).toLocaleDateString("en-AU", {
                             day: "numeric",
@@ -269,7 +272,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Stats card */}
-          {teamStanding && (
+          {teamStanding && !isMiniRoos && (
             <div>
               <h2 className="text-xl font-black text-navy mb-3">Season Stats</h2>
               <div className="bg-white border border-border rounded-xl p-4 space-y-3">
@@ -318,7 +321,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
           )}
 
           {/* Form */}
-          {formResults.length > 0 && (
+          {formResults.length > 0 && !isMiniRoos && (
             <div>
               <h2 className="text-xl font-black text-navy mb-3">Form</h2>
               <div className="flex gap-1.5">

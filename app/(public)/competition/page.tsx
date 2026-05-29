@@ -44,6 +44,8 @@ export default async function CompetitionPage({
   const { comp } = await searchParams;
   const { competitions, activeComp, fixtures, standings, topScorers } = await getData(comp);
 
+  const isMiniRoos = ["U5","U6","U7","U8","U9"].includes(activeComp?.ageGroup ?? "");
+
   if (!activeComp) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
@@ -112,7 +114,7 @@ export default async function CompetitionPage({
                       >
                         {isPlayed || isLive ? (
                           <span className="font-black text-navy">
-                            {f.homeScore} – {f.awayScore}
+                            {isMiniRoos ? "vs" : `${f.homeScore} – ${f.awayScore}`}
                           </span>
                         ) : (
                           <span className="text-xs text-muted">
@@ -138,7 +140,8 @@ export default async function CompetitionPage({
           ))}
         </div>
 
-        {/* Sidebar: ladder + scorers */}
+        {/* Sidebar: ladder + scorers - hidden for MiniRoos */}
+        {!isMiniRoos && (<>
         <div className="space-y-6">
           {/* Ladder */}
           <div>
@@ -207,6 +210,7 @@ export default async function CompetitionPage({
             </div>
           )}
         </div>
+        </>)}
       </div>
     </div>
   );
