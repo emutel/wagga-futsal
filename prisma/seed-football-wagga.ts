@@ -64,8 +64,8 @@ async function seedComp(
 async function main() {
   // 1. Venues + pitches
   await prisma.venue.upsert({
-    where:{id:"fww-bolton-park"}, update:{},
-    create:{id:"fww-bolton-park",name:"Bolton Park",address:"Cnr Bourke & Tompson Streets, Wagga Wagga NSW 2650"},
+    where:{id:"fww-bolton-park"}, update:{mapImage:"/bolton-park-map.jpg"},
+    create:{id:"fww-bolton-park",name:"Bolton Park",address:"Cnr Bourke & Tompson Streets, Wagga Wagga NSW 2650",mapImage:"/bolton-park-map.jpg"},
   });
   for (let i = 1; i <= 15; i++) {
     await prisma.pitch.upsert({
@@ -76,7 +76,7 @@ async function main() {
 
   await prisma.venue.upsert({
     where:{id:"fww-duke-of-kent"}, update:{},
-    create:{id:"fww-duke-of-kent",name:"Duke of Kent Park",address:"Duke of Kent Drive, Wagga Wagga NSW 2650"},
+    create:{id:"fww-duke-of-kent",name:"Duke of Kent Park",address:"Duke of Kent Drive, Wagga Wagga NSW 2650",mapImage:"/duke-of-kent-map.jpg"},
   });
   for (let i = 1; i <= 5; i++) {
     await prisma.pitch.upsert({

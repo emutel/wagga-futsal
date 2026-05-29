@@ -52,8 +52,17 @@ export default function VenuesPage() {
             📍 Get Directions
           </a>
         </div>
-        <div className="bg-white border border-border rounded-2xl p-6">
-          <p className="text-muted text-sm">Field map coming soon.</p>
+        <div className="bg-white border border-border rounded-2xl overflow-hidden">
+          <Image
+            src="/duke-of-kent-map.jpg"
+            alt="Duke of Kent Park field map showing fields 1-6"
+            width={1200}
+            height={900}
+            className="w-full object-contain"
+          />
+          <div className="p-4 border-t border-border">
+            <p className="text-xs text-muted">Duke of Kent Park has 6 fields. Check your fixture for your assigned field number.</p>
+          </div>
         </div>
       </div>
 

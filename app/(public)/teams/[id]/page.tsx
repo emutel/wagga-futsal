@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { getStandings } from "@/lib/standings";
 import type { Metadata } from "next";
@@ -144,6 +145,15 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                       <div className="flex-1 min-w-0">
                         <p className="text-xs text-muted mb-1">
                           {f.competition.name} · {f.pitch ? `${f.pitch.name}, ${f.pitch.venue.name}` : "TBC"}
+                          {f.pitch?.venue.mapImage && (
+                            <a
+                              href="/venues"
+                              className="ml-2 text-brand hover:underline text-xs font-semibold"
+                              title="View field map"
+                            >
+                              🗺️ Map
+                            </a>
+                          )}
                         </p>
                         <p className="font-semibold text-navy">
                           {isHome ? "vs" : "@"} {opp.name}
