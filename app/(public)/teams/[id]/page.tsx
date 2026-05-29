@@ -88,7 +88,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
   const standings = activeCompetition
     ? await getStandings(activeCompetition.competition.id)
     : [];
-  const isMiniRoos = ["U5","U6","U7","U8","U9"].includes(activeCompetition?.competition.ageGroup ?? "");
+  const isMiniRoos = true;
   const teamStanding = standings.find((s) => s.teamId === id);
   const teamPosition = standings.findIndex((s) => s.teamId === id) + 1;
 
