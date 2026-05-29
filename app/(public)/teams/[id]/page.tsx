@@ -113,7 +113,17 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
         <Link href="/competition" className="text-brand text-sm font-semibold hover:underline mb-3 inline-block">
           ← Back to Competitions
         </Link>
-        <h1 className="text-4xl font-black text-navy">{team.name}</h1>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <h1 className="text-4xl font-black text-navy">{team.name}</h1>
+          <a
+            href={`/api/teams/${id}/calendar`}
+            download
+            className="flex items-center gap-2 bg-navy hover:bg-navy-mid text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shrink-0"
+            title="Download fixtures as a calendar file — works with Apple Calendar, Google Calendar and Outlook"
+          >
+            📅 Sync to Calendar
+          </a>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
