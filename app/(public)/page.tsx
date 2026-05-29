@@ -97,7 +97,7 @@ export default async function HomePage() {
               Est. 2012 · Wagga Wagga, NSW
             </p>
             <h1 className="text-5xl md:text-6xl font-black mb-4">
-              WAGGA <span className="text-brand">FUTSAL</span>
+              FOOTBALL <span className="text-brand">WAGGA WAGGA</span>
             </h1>
             <p className="text-white/70 text-lg mb-8 max-w-xl">
               Football for all ages — from Under 5s to Opens. Register now and join the
