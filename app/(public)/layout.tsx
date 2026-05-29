@@ -1,5 +1,7 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 
 const NAV_LINKS = [
   { href: "/competition", label: "Competitions" },
@@ -10,6 +12,8 @@ const NAV_LINKS = [
 ];
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <>
       <header className="bg-navy text-white sticky top-0 z-50 shadow-lg">
@@ -18,6 +22,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <Image src="/logo.png" alt="FOOTBALL WAGGA WAGGA" width={44} height={44} className="rounded" priority />
             <span className="text-white font-black text-lg tracking-tight hidden sm:block">FOOTBALL WAGGA WAGGA</span>
           </Link>
+
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
             {NAV_LINKS.map((l) => (
               <Link
@@ -29,13 +35,42 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               </Link>
             ))}
           </nav>
-          <Link
-            href="/referee/login"
-            className="text-xs bg-brand hover:bg-brand-dark text-white px-3 py-1.5 rounded font-semibold transition-colors"
-          >
-            Referee Login
-          </Link>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/referee/login"
+              className="text-xs bg-brand hover:bg-brand-dark text-white px-3 py-1.5 rounded font-semibold transition-colors"
+            >
+              Referee Login
+            </Link>
+            {/* Hamburger */}
+            <button
+              className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+            >
+              <span className={`block w-6 h-0.5 bg-white transition-transform ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
+              <span className={`block w-6 h-0.5 bg-white transition-opacity ${menuOpen ? "opacity-0" : ""}`} />
+              <span className={`block w-6 h-0.5 bg-white transition-transform ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+            </button>
+          </div>
         </div>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="md:hidden bg-navy-mid border-t border-white/10 px-4 py-4 flex flex-col gap-4">
+            {NAV_LINKS.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="text-sm font-semibold text-white/80 hover:text-brand transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </header>
 
       <main className="flex-1">{children}</main>
