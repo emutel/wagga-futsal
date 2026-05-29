@@ -79,13 +79,13 @@ export default async function HomePage() {
         <div className="relative max-w-5xl mx-auto px-4 py-16 flex flex-col md:flex-row items-center gap-8">
           <div className="flex-1 text-center md:text-left">
             <p className="text-brand font-semibold text-sm uppercase tracking-widest mb-3">
-              Est. 2012 · Wagga Wagga, NSW
+              Wagga Wagga, NSW
             </p>
             <h1 className="text-5xl md:text-6xl font-black mb-4 text-white">
               FOOTBALL <span className="text-brand">WAGGA WAGGA</span>
             </h1>
             <p className="text-white/70 text-lg mb-8 max-w-xl">
-              Wagga Wagga's home of junior football — MiniRoos, competitive juniors and community football for all ages.
+              Wagga Wagga's home of football — MiniRoos through to Opens. Register now and play in 2026.
             </p>
             <div className="flex flex-wrap gap-3 justify-center md:justify-start">
               <a
@@ -306,8 +306,8 @@ export default async function HomePage() {
                 <p className="text-muted text-xs">Bourke St, Wagga Wagga NSW 2650</p>
               </div>
               <div className="border-t border-border pt-3">
-                <p className="font-semibold text-navy">EQUEX Centre</p>
-                <p className="text-muted text-xs">Cnr Bourke & Fernleigh Sts, Wagga Wagga</p>
+                <p className="font-semibold text-navy">Jubilee Park</p>
+                <p className="text-muted text-xs">Wagga Wagga NSW 2650</p>
               </div>
             </div>
           </div>
