@@ -125,10 +125,10 @@ export default function LiveMatchClient({ fixture: initial }: { fixture: Fixture
               <p className="text-white/50 text-xs mt-2">
                 {new Date(fixture.scheduledAt).toLocaleDateString("en-AU", {
                   weekday: "short", day: "numeric", month: "short",
-                })}{" "}
+                , timeZone: "Australia/Sydney"})}{" "}
                 {new Date(fixture.scheduledAt).toLocaleTimeString("en-AU", {
                   hour: "2-digit", minute: "2-digit",
-                })}
+                , timeZone: "Australia/Sydney"})}
               </p>
             )}
           </div>

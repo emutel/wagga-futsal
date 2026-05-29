@@ -116,7 +116,7 @@ export default async function CompetitionPage({
                           </span>
                         ) : (
                           <span className="text-xs text-muted">
-                            {new Date(f.scheduledAt).toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" })}
+                            {new Date(f.scheduledAt).toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" , timeZone: "Australia/Sydney"})}
                           </span>
                         )}
                         <p className={`text-xs font-bold mt-0.5 ${isLive ? "text-live" : "text-muted"}`}>

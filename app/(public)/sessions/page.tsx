@@ -52,11 +52,11 @@ export default async function SessionsPage() {
                     <span className="text-muted">Date: </span>
                     {new Date(s.scheduledAt).toLocaleDateString("en-AU", {
                       weekday: "long", day: "numeric", month: "long", year: "numeric",
-                    })}
+                    , timeZone: "Australia/Sydney"})}
                   </p>
                   <p>
                     <span className="text-muted">Time: </span>
-                    {new Date(s.scheduledAt).toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" })}
+                    {new Date(s.scheduledAt).toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" , timeZone: "Australia/Sydney"})}
                     {" · "}
                     {s.durationMins} mins
                   </p>

@@ -116,7 +116,7 @@ export default async function HomePage() {
                 href="/competition"
                 className="border border-white/30 hover:border-brand text-white font-semibold px-6 py-3 rounded-lg transition-colors"
               >
-                View Draws & Ladders
+                View Draws
               </Link>
               <Link
                 href="/sessions"
@@ -164,7 +164,7 @@ export default async function HomePage() {
                       {f.homeTeam.name}
                     </span>
                     <span className="font-black text-white text-3xl shrink-0">
-                      {f.homeScore}–{f.awayScore}
+                      vs
                     </span>
                     <span className="font-bold text-white text-sm flex-1 truncate text-right">
                       {f.awayTeam.name}
@@ -218,13 +218,13 @@ export default async function HomePage() {
                           weekday: "short",
                           day: "numeric",
                           month: "short",
-                        })}
+                        , timeZone: "Australia/Sydney"})}
                       </p>
                       <p className="text-xs text-muted">
                         {new Date(f.scheduledAt).toLocaleTimeString("en-AU", {
                           hour: "2-digit",
                           minute: "2-digit",
-                        })}
+                        , timeZone: "Australia/Sydney"})}
                       </p>
                     </div>
                   </Link>
@@ -256,7 +256,7 @@ export default async function HomePage() {
                           {f.homeTeam.name}
                         </span>
                         <span className="font-black text-navy shrink-0 text-xl">
-                          {f.homeScore}–{f.awayScore}
+                          vs
                         </span>
                         <span className="font-semibold text-navy truncate flex-1 text-right">
                           {f.awayTeam.name}
@@ -275,7 +275,7 @@ export default async function HomePage() {
 
         {/* Right: ladder + top scorers + competitions */}
         <div className="space-y-6">
-          {topCompetition && standings.length > 0 && (
+          {false && (
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-xl font-black text-navy">Ladder</h2>
