@@ -58,7 +58,6 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
     where: {
       OR: [{ homeTeamId: id }, { awayTeamId: id }],
       status: "SCHEDULED",
-      scheduledAt: { gte: new Date() },
     },
     include: {
       homeTeam: true,
@@ -67,7 +66,6 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
       pitch: { include: { venue: true } },
     },
     orderBy: { scheduledAt: "asc" },
-    take: 5,
   });
 
   // Top scorers for this team across all competitions
@@ -146,12 +144,14 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                             weekday: "short",
                             day: "numeric",
                             month: "short",
+                            timeZone: "Australia/Sydney",
                           })}
                         </p>
                         <p className="text-xs text-muted">
                           {new Date(f.scheduledAt).toLocaleTimeString("en-AU", {
                             hour: "2-digit",
                             minute: "2-digit",
+                            timeZone: "Australia/Sydney",
                           })}
                         </p>
                       </div>
