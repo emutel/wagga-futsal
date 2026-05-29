@@ -29,9 +29,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* Sidebar */}
       <aside className="w-56 bg-navy text-white flex flex-col shrink-0">
         <div className="px-4 py-5 border-b border-white/10 flex items-center gap-3">
-          <Image src="/logo.png" alt="Wagga Futsal" width={36} height={36} className="rounded shrink-0" />
+          <Image src="/logo.png" alt="FOOTBALL WAGGA" width={36} height={36} className="rounded shrink-0" />
           <div>
-            <p className="text-white font-black text-sm leading-tight">WAGGA FUTSAL</p>
+            <p className="text-white font-black text-sm leading-tight">FOOTBALL WAGGA</p>
             <p className="text-white/40 text-xs">Admin</p>
           </div>
         </div>

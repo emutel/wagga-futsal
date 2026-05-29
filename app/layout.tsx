@@ -6,10 +6,10 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "Wagga Futsal", template: "%s | Wagga Futsal" },
+  title: { default: "FOOTBALL WAGGA", template: "%s | FOOTBALL WAGGA" },
   description: "Wagga Wagga's premier indoor futsal competition — Est. 2012",
   openGraph: {
-    siteName: "Wagga Futsal",
+    siteName: "FOOTBALL WAGGA",
     type: "website",
   },
 };

@@ -116,7 +116,7 @@ Search for the existing organisation name and replace it throughout:
 
 ```bash
 # Find all occurrences
-grep -r "Wagga Futsal\|WAGGA FUTSAL" --include="*.tsx" --include="*.ts" .
+grep -r "FOOTBALL WAGGA\|FOOTBALL WAGGA" --include="*.tsx" --include="*.ts" .
 ```
 
 Key files to update:

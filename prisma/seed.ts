@@ -7,7 +7,7 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("🌱 Seeding Wagga Futsal...");
+  console.log("🌱 Seeding FOOTBALL WAGGA...");
 
   // ─── Venue & Pitches ─────────────────────────────────────────────────────────
   const venue = await prisma.venue.upsert({
@@ -31,10 +31,10 @@ async function main() {
   // ─── Admin user ───────────────────────────────────────────────────────────────
   const adminHash = await bcrypt.hash("admin123", 12);
   const admin = await prisma.user.upsert({
-    where: { email: "admin@waggafutsal.com.au" },
+    where: { email: "development@footballwagga.com.au" },
     update: {},
     create: {
-      email: "admin@waggafutsal.com.au",
+      email: "development@footballwagga.com.au",
       passwordHash: adminHash,
       name: "Samuel Gray",
       role: "ADMIN",
@@ -45,10 +45,10 @@ async function main() {
   // ─── Referee users ────────────────────────────────────────────────────────────
   const refHash = await bcrypt.hash("referee123", 12);
   const ref1User = await prisma.user.upsert({
-    where: { email: "ref1@waggafutsal.com.au" },
+    where: { email: "ref1@footballwagga.com.au" },
     update: {},
     create: {
-      email: "ref1@waggafutsal.com.au",
+      email: "ref1@footballwagga.com.au",
       passwordHash: refHash,
       name: "Jake Thompson",
       role: "REFEREE",
@@ -57,10 +57,10 @@ async function main() {
     include: { referee: true },
   });
   const ref2User = await prisma.user.upsert({
-    where: { email: "ref2@waggafutsal.com.au" },
+    where: { email: "ref2@footballwagga.com.au" },
     update: {},
     create: {
-      email: "ref2@waggafutsal.com.au",
+      email: "ref2@footballwagga.com.au",
       passwordHash: refHash,
       name: "Mia Collins",
       role: "REFEREE",
@@ -309,11 +309,11 @@ async function main() {
     update: {},
     create: {
       id: "rules-v1",
-      title: "Wagga Futsal Competition Rules",
+      title: "FOOTBALL WAGGA Competition Rules",
       version: "1.1",
       active: true,
       publishedAt: new Date("2025-01-01"),
-      content: `# Wagga Futsal Competition Rules 2025–2026
+      content: `# FOOTBALL WAGGA Competition Rules 2025–2026
 
 ## 1. General
 1.1 All players must be registered via PlayFootball prior to participating.
@@ -350,8 +350,8 @@ async function main() {
   console.log("✓ Rules document");
 
   console.log("\n✅ Seed complete!\n");
-  console.log("Admin login:    admin@waggafutsal.com.au  /  admin123");
-  console.log("Referee login:  ref1@waggafutsal.com.au   /  referee123");
+  console.log("Admin login:    development@footballwagga.com.au  /  admin123");
+  console.log("Referee login:  ref1@footballwagga.com.au   /  referee123");
 }
 
 main()

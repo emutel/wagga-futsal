@@ -9,7 +9,7 @@ export default function GalleryPage() {
     <div className="max-w-4xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-black text-navy mb-2">Gallery & News</h1>
       <p className="text-muted mb-8">
-        Follow us on Facebook for the latest photos, videos, and news from Wagga Futsal.
+        Follow us on Facebook for the latest photos, videos, and news from FOOTBALL WAGGA.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

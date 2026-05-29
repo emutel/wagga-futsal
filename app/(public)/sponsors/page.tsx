@@ -29,7 +29,7 @@ export default async function SponsorsPage() {
     <div className="max-w-5xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-black text-navy mb-2">Our Sponsors</h1>
       <p className="text-muted mb-10">
-        Wagga Futsal is proudly supported by these local businesses and organisations.
+        FOOTBALL WAGGA is proudly supported by these local businesses and organisations.
       </p>
 
       {Object.entries(byTier).map(([tier, group]) => (
@@ -77,10 +77,10 @@ export default async function SponsorsPage() {
       <div className="mt-12 bg-navy/5 rounded-2xl p-8 text-center">
         <h3 className="font-black text-navy text-xl mb-2">Become a Sponsor</h3>
         <p className="text-muted mb-4">
-          Support Wagga Futsal and get your brand in front of hundreds of local families every week.
+          Support FOOTBALL WAGGA and get your brand in front of hundreds of local families every week.
         </p>
         <a
-          href="mailto:admin@waggafutsal.com.au"
+          href="mailto:development@footballwagga.com.au"
           className="inline-block bg-brand hover:bg-brand-dark text-white font-bold px-6 py-3 rounded-lg transition-colors"
         >
           Get in Touch

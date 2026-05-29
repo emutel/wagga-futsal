@@ -129,7 +129,7 @@ export default async function HomePage() {
           <div className="shrink-0">
             <Image
               src="/logo.png"
-              alt="Wagga Futsal"
+              alt="FOOTBALL WAGGA"
               width={200}
               height={200}
               className="drop-shadow-2xl"

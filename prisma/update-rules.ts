@@ -4,7 +4,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
-const RULES_CONTENT = `# Wagga Futsal Competition Rules 2025–2026
+const RULES_CONTENT = `# FOOTBALL WAGGA Competition Rules 2025–2026
 
 ## 1. Competitions – Team Requirements
 
@@ -19,7 +19,7 @@ Competitions are covered under these guidelines.
 
 - 2.1 Match balls will be Deploy Futsal Balls. Balls used for Finals Series must bear the official logo 'FIFA approved' or 'FIFA inspected'.
 - 2.2 Size 3 match balls are to be used for all age groups up to and including Under 12s. Size 4 match balls are to be used for all other age groups including open age.
-- 2.3 Wagga Futsal shall supply all Match Balls.
+- 2.3 FOOTBALL WAGGA shall supply all Match Balls.
 
 ## 3. Identification and Registration
 
@@ -39,21 +39,21 @@ Competitions are covered under these guidelines.
 - 4.1.6 Matching long socks must be worn by all team members. Socks must cover the shin pads entirely.
 - 4.1.7 Shin pads must be worn. Shin pads must comply with Law 4 of the FIFA Laws of the Game — made of rubber, plastic or a similar approved material and must provide a reasonable degree of protection by covering the shins.
 - 4.1.8 Non-marking shoes must be worn at all times.
-- 4.1.9 Where the colours of both teams are sufficiently similar it is the responsibility of the second listed team on the draw to change into an alternate coloured strip, with numbers, or use the numbered bibs provided by Wagga Futsal ONLY.
+- 4.1.9 Where the colours of both teams are sufficiently similar it is the responsibility of the second listed team on the draw to change into an alternate coloured strip, with numbers, or use the numbered bibs provided by FOOTBALL WAGGA ONLY.
 
 ### 4.3 Jewellery
 
 - 4.3.1 As per Law 4 of the FIFA Laws of the Game the wearing of jewellery is not permitted.
 - 4.3.2 Official Medic Alert bracelets and necklaces are the only jewellery approved to be worn. All Medic Alert bracelets and necklaces must be securely taped to the body and the referees informed of them being worn prior to the game.
-- 4.3.3 **NO TAPING of piercings is permitted in any Wagga Futsal Competition.**
+- 4.3.3 **NO TAPING of piercings is permitted in any FOOTBALL WAGGA Competition.**
 
 ## 5. Referees
 
-During the Regular Wagga Futsal Season all league competition games will be refereed by 1 (one) referee with the aid of a timekeeper. ONLY in the finals series will 2 (two) referees be appointed to officiate the games, along with a timekeeper.
+During the Regular FOOTBALL WAGGA Season all league competition games will be refereed by 1 (one) referee with the aid of a timekeeper. ONLY in the finals series will 2 (two) referees be appointed to officiate the games, along with a timekeeper.
 
 ### 5.1 Appointments
 
-- 5.1.1 Unless otherwise decided, the appointment of referees will be made by the Wagga Futsal Competition Managers, namely Samuel Gray or Amanda Gray.
+- 5.1.1 Unless otherwise decided, the appointment of referees will be made by the FOOTBALL WAGGA Competition Managers, namely Samuel Gray or Amanda Gray.
 
 ### 5.2 Persons not to approach referee
 
@@ -82,15 +82,15 @@ No player may play for any team unless he/she is correctly registered with the a
 
 *Players are NOT permitted to play in an age group lower than that in which they register, regardless of the fact that they may be eligible.*
 
-*A player may only play in an age group higher than their registered age group if they meet the minimum age requirement AND if a consent form has been completed by their parent/guardian and submitted and approved by Wagga Futsal. NO EXCEPTIONS.*
+*A player may only play in an age group higher than their registered age group if they meet the minimum age requirement AND if a consent form has been completed by their parent/guardian and submitted and approved by FOOTBALL WAGGA. NO EXCEPTIONS.*
 
 - 7.4 Male players are not permitted to play in female only competitions.
-- 7.5 Female players playing in mixed or open competitions are permitted to play down one (1) age group below their defined age group with the approval of Wagga Futsal.
+- 7.5 Female players playing in mixed or open competitions are permitted to play down one (1) age group below their defined age group with the approval of FOOTBALL WAGGA.
 
 ## 8. Draws
 
-- 8.1 Draws for the competition will be e-mailed to competing teams and published on the Wagga Futsal website.
-- 8.2 Draws are subject to change at late notice. Wagga Futsal will endeavour to contact all teams affected by such changes.
+- 8.1 Draws for the competition will be e-mailed to competing teams and published on the FOOTBALL WAGGA website.
+- 8.2 Draws are subject to change at late notice. FOOTBALL WAGGA will endeavour to contact all teams affected by such changes.
 - 8.3 Teams are responsible for checking the draw regularly prior to their matches to ensure they are aware of any draw changes.
 
 ## 10. Conduct of Games
@@ -117,7 +117,7 @@ No player may play for any team unless he/she is correctly registered with the a
 
 ### 10.7 Pitches
 
-Pitches shall be the indoor pitches at EQUEX Multi Purpose Sports Centre OR Bolton Park Stadium, Wagga Wagga OR at a nominated Wagga Futsal Venue.
+Pitches shall be the indoor pitches at EQUEX Multi Purpose Sports Centre OR Bolton Park Stadium, Wagga Wagga OR at a nominated FOOTBALL WAGGA Venue.
 
 ### 10.8 Points Allocation
 
@@ -137,7 +137,7 @@ At the completion of the competition round robin matches, the points table place
 
 ## 12. Match Sheets
 
-All match sheets will be provided by Wagga Futsal.
+All match sheets will be provided by FOOTBALL WAGGA.
 
 - 12.1 It is the responsibility of the respective teams to ensure that match sheets are correct and include all player's names and shirt numbers prior to the start of the game.
 - 12.2 Only players correctly listed on the match sheet at the start of play will be permitted to participate.
@@ -155,7 +155,7 @@ All match sheets will be provided by Wagga Futsal.
 
 ## 15. Forfeiture of Games
 
-- 15.1 Teams must notify Wagga Futsal at least 24 hours prior to their game of their intention to forfeit.
+- 15.1 Teams must notify FOOTBALL WAGGA at least 24 hours prior to their game of their intention to forfeit.
 - 15.2 Notification of forfeiture must be in writing, either via e-mail or by hand.
 - 15.3 Forfeiture of games will result in a score-line of **5–0** being recorded against the forfeiting team.
 - 15.4 Teams forfeiting twice in a single season may be removed from the competition, with no refund of fees.
@@ -215,7 +215,7 @@ All match sheets will be provided by Wagga Futsal.
 | Under 16 | Opens | $130 |
 | Under 19 | Opens | $130 |
 
-Payment: Wagga Futsal Pty Ltd · Westpac Bank · BSB: 732769 · Account: 927477. Reference: Player Name + Pitch Fees.
+Payment: FOOTBALL WAGGA Pty Ltd · Westpac Bank · BSB: 732769 · Account: 927477. Reference: Player Name + Pitch Fees.
 `;
 
 async function main() {
@@ -227,7 +227,7 @@ async function main() {
     await prisma.rulesDocument.update({
       where: { id: existing.id },
       data: {
-        title: "Wagga Futsal Competition Rules 2025–2026",
+        title: "FOOTBALL WAGGA Competition Rules 2025–2026",
         content: RULES_CONTENT,
         version: "1.1",
         publishedAt: new Date("2025-07-01"),
@@ -238,7 +238,7 @@ async function main() {
   } else {
     await prisma.rulesDocument.create({
       data: {
-        title: "Wagga Futsal Competition Rules 2025–2026",
+        title: "FOOTBALL WAGGA Competition Rules 2025–2026",
         content: RULES_CONTENT,
         version: "1.1",
         publishedAt: new Date("2025-07-01"),
