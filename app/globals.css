@@ -4,13 +4,13 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Wagga Futsal brand */
-  --color-brand:        #E91E8C;
-  --color-brand-dark:   #C0166F;
-  --color-brand-light:  #F472B6;
-  --color-navy:         #0D1B2E;
-  --color-navy-mid:     #1A2E4A;
-  --color-navy-light:   #243B55;
+  /* Football Wagga Wagga brand */
+  --color-brand:        #CC0000;
+  --color-brand-dark:   #990000;
+  --color-brand-light:  #FF3333;
+  --color-navy:         #111111;
+  --color-navy-mid:     #1C1C1C;
+  --color-navy-light:   #2A2A2A;
 
   /* Semantic */
   --color-background:   #ffffff;
