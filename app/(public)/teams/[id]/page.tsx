@@ -132,7 +132,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                     >
                       <div className="flex-1 min-w-0">
                         <p className="text-xs text-muted mb-1">
-                          {f.competition.name} · {f.pitch?.venue.name ?? "TBC"}
+                          {f.competition.name} · {f.pitch ? `${f.pitch.name}, ${f.pitch.venue.name}` : "TBC"}
                         </p>
                         <p className="font-semibold text-navy">
                           {isHome ? "vs" : "@"} {opp.name}
