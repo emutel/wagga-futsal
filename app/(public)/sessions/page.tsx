@@ -51,8 +51,7 @@ export default async function SessionsPage() {
                   <p>
                     <span className="text-muted">Date: </span>
                     {new Date(s.scheduledAt).toLocaleDateString("en-AU", {
-                      weekday: "long", day: "numeric", month: "long", year: "numeric",
-                    , timeZone: "Australia/Sydney"})}
+                      weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Australia/Sydney"})}
                   </p>
                   <p>
                     <span className="text-muted">Time: </span>
