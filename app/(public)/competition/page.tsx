@@ -65,12 +65,12 @@ export default async function CompetitionPage({
       <h1 className="text-3xl font-black text-navy mb-2">Competitions</h1>
 
       {/* Competition tabs */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-2 mb-8 overflow-hidden">
         {competitions.map((c) => (
           <Link
             key={c.id}
             href={`/competition?comp=${c.id}`}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
               c.id === activeComp.id
                 ? "bg-brand text-white"
                 : "bg-white border border-border text-navy hover:border-brand"
@@ -112,7 +112,7 @@ export default async function CompetitionPage({
                       >
                         {isPlayed || isLive ? (
                           <span className="font-black text-navy">
-                            "vs"
+                            {f.homeScore} – {f.awayScore}
                           </span>
                         ) : (
                           <span className="text-xs text-muted">
