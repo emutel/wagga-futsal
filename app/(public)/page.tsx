@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import TeamSearch from "@/components/TeamSearch";
+import MyTeamsWidget from "@/components/MyTeamsWidget";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,7 @@ async function getHomepageData() {
   const [upcomingFixtures, liveFixtures, recentResults, competitions, sponsors] =
     await Promise.all([
       prisma.fixture.findMany({
-        where: { status: "SCHEDULED" },
+        where: { status: "SCHEDULED", scheduledAt: { gte: new Date() } },
         include: {
           homeTeam: true,
           awayTeam: true,
@@ -163,17 +164,20 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* My Teams widget (client, reads localStorage) */}
+      <MyTeamsWidget />
+
       {/* Competitions strip */}
       {competitions.length > 0 && (
         <section className="bg-navy/5 border-b border-border">
-          <div className="max-w-5xl mx-auto px-4 py-5">
-            <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-hide">
-              <span className="text-xs font-black text-muted uppercase tracking-widest shrink-0">2026 Competitions</span>
+          <div className="max-w-5xl mx-auto px-4 py-4">
+            <p className="text-xs font-black text-muted uppercase tracking-widest mb-3">2026 Competitions</p>
+            <div className="flex flex-wrap gap-2">
               {competitions.map((c) => (
                 <Link
                   key={c.id}
                   href={`/competition?comp=${c.id}`}
-                  className="shrink-0 bg-white border border-border hover:border-brand rounded-full px-4 py-1.5 text-sm font-semibold text-navy hover:text-brand transition-colors flex items-center gap-2"
+                  className="bg-white border border-border hover:border-brand rounded-full px-4 py-1.5 text-sm font-semibold text-navy hover:text-brand transition-colors flex items-center gap-2 whitespace-nowrap"
                 >
                   {c.name}
                   {c.status === "FINALS" && <span className="bg-brand text-white text-xs px-1.5 py-0.5 rounded-full font-bold">FINALS</span>}

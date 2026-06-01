@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { getMyTeams, saveMyTeams } from "@/components/MyTeamsWidget";
 
 interface Result { id: string; name: string; competition: string | null; }
 
@@ -34,8 +35,11 @@ export default function TeamSearch({ placeholder = "Search for your team..." }: 
   }, [query]);
 
   const select = (team: Result) => {
-    // Save to localStorage as "my team"
-    localStorage.setItem("myTeam", JSON.stringify({ id: team.id, name: team.name }));
+    // Add to saved teams array (if not already there, up to 5)
+    const current = getMyTeams();
+    if (!current.some((t) => t.id === team.id) && current.length < 5) {
+      saveMyTeams([...current, { id: team.id, name: team.name }]);
+    }
     setOpen(false);
     setQuery("");
     router.push(`/teams/${team.id}`);

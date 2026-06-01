@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const team = await prisma.team.findUnique({ where: { id } });
-  return { title: team ? `${team.name} — Football Wagga Wagga` : "Team" };
+  return { title: team ? `${team.name} — Football Wagga` : "Team" };
 }
 
 function fmt(date: Date | string, type: "date" | "time" | "daydate") {
@@ -20,8 +20,15 @@ function fmt(date: Date | string, type: "date" | "time" | "daydate") {
   return d.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short", timeZone: "Australia/Sydney" });
 }
 
+// Known competition-wide BYE weeks (no games scheduled these Saturdays)
+const GENERAL_BYES = [
+  { date: new Date("2026-06-06T00:00:00+10:00"), label: "Long Weekend — No games scheduled" },
+  { date: new Date("2026-07-11T00:00:00+10:00"), label: "General BYE — No games scheduled" },
+];
+
 export default async function TeamPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const now = new Date();
 
   const team = await prisma.team.findUnique({
     where: { id },
@@ -31,8 +38,16 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
   });
   if (!team) notFound();
 
+  const competitionIds = team.competitions.map((ct) => ct.competitionId);
+  const competitions = team.competitions.map((ct) => ct.competition);
+
+  // Only FUTURE upcoming fixtures
   const upcomingFixtures = await prisma.fixture.findMany({
-    where: { OR: [{ homeTeamId: id }, { awayTeamId: id }], status: "SCHEDULED" },
+    where: {
+      OR: [{ homeTeamId: id }, { awayTeamId: id }],
+      status: "SCHEDULED",
+      scheduledAt: { gte: now },
+    },
     include: {
       homeTeam: true, awayTeam: true, competition: true,
       pitch: { include: { venue: true } },
@@ -47,14 +62,81 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
     take: 5,
   });
 
-  const competitions = team.competitions.map(c => c.competition);
+  // ── BYE detection ────────────────────────────────────────────────────────────
+  // Team BYEs: rounds where the competition has other games but this team doesn't play
+  let teamByeEntries: Array<{ round: number; scheduledAt: Date; competitionName: string }> = [];
 
-  // Group upcoming by date
-  const byDate: Record<string, typeof upcomingFixtures> = {};
-  for (const f of upcomingFixtures) {
-    const key = fmt(f.scheduledAt, "daydate");
-    if (!byDate[key]) byDate[key] = [];
-    byDate[key].push(f);
+  if (competitionIds.length > 0) {
+    const allCompFixtures = await prisma.fixture.findMany({
+      where: {
+        competitionId: { in: competitionIds },
+        status: "SCHEDULED",
+        scheduledAt: { gte: now },
+      },
+      select: { round: true, scheduledAt: true, competitionId: true },
+      orderBy: { scheduledAt: "asc" },
+    });
+
+    // One entry per round per competition (earliest fixture time)
+    const roundMap = new Map<string, { round: number; scheduledAt: Date; competitionId: string }>();
+    for (const f of allCompFixtures) {
+      const key = `${f.competitionId}:${f.round}`;
+      if (!roundMap.has(key)) roundMap.set(key, { round: f.round, scheduledAt: f.scheduledAt, competitionId: f.competitionId });
+    }
+
+    // Which round+comp keys does this team have fixtures for?
+    const teamRoundKeys = new Set(upcomingFixtures.map((f) => `${f.competitionId}:${f.round}`));
+
+    for (const [key, { round, scheduledAt, competitionId }] of roundMap) {
+      if (!teamRoundKeys.has(key)) {
+        const comp = team.competitions.find((ct) => ct.competitionId === competitionId);
+        if (comp) {
+          teamByeEntries.push({ round, scheduledAt, competitionName: comp.competition.name });
+        }
+      }
+    }
+  }
+
+  // General BYEs: only show if they're still in the future and team is mid-season
+  const lastFixtureDate = upcomingFixtures.at(-1)?.scheduledAt ?? null;
+  const generalByeEntries = GENERAL_BYES.filter(
+    (b) => b.date >= now && (!lastFixtureDate || b.date <= lastFixtureDate)
+  );
+
+  // ── Build unified schedule ───────────────────────────────────────────────────
+  type ScheduleItem =
+    | { kind: "fixture"; fixture: (typeof upcomingFixtures)[0]; dateKey: string }
+    | { kind: "teambye"; round: number; scheduledAt: Date; competitionName: string; dateKey: string }
+    | { kind: "generalbye"; label: string; scheduledAt: Date; dateKey: string };
+
+  const schedule: ScheduleItem[] = [
+    ...upcomingFixtures.map((f) => ({
+      kind: "fixture" as const,
+      fixture: f,
+      dateKey: fmt(f.scheduledAt, "daydate"),
+    })),
+    ...teamByeEntries.map((b) => ({
+      kind: "teambye" as const,
+      ...b,
+      dateKey: fmt(b.scheduledAt, "daydate"),
+    })),
+    ...generalByeEntries.map((b) => ({
+      kind: "generalbye" as const,
+      label: b.label,
+      scheduledAt: b.date,
+      dateKey: fmt(b.date, "daydate"),
+    })),
+  ].sort((a, b) => {
+    const da = a.kind === "fixture" ? a.fixture.scheduledAt : a.scheduledAt;
+    const db = b.kind === "fixture" ? b.fixture.scheduledAt : b.scheduledAt;
+    return new Date(da).getTime() - new Date(db).getTime();
+  });
+
+  // Group by date
+  const byDate: Record<string, ScheduleItem[]> = {};
+  for (const item of schedule) {
+    if (!byDate[item.dateKey]) byDate[item.dateKey] = [];
+    byDate[item.dateKey].push(item);
   }
 
   const nextGame = upcomingFixtures[0] ?? null;
@@ -69,7 +151,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
           <div>
             <h1 className="text-3xl md:text-4xl font-black text-navy">{team.name}</h1>
             <div className="flex flex-wrap gap-2 mt-2">
-              {competitions.map(c => (
+              {competitions.map((c) => (
                 <Link key={c.id} href={`/competition?comp=${c.id}`} className="text-xs bg-navy/10 hover:bg-navy/20 text-navy font-semibold px-3 py-1 rounded-full transition-colors">
                   {c.name}
                 </Link>
@@ -90,7 +172,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
       </div>
 
       {/* Next game hero card */}
-      {nextGame && (
+      {nextGame ? (
         <div className="bg-navy rounded-2xl p-6 mb-8 text-white">
           <p className="text-white/50 text-xs uppercase tracking-widest mb-3 font-semibold">Next Game</p>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -135,11 +217,17 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
             </a>
           </div>
         </div>
+      ) : (
+        <div className="bg-white border border-border rounded-2xl p-6 mb-8 text-center">
+          <p className="text-4xl mb-2">✅</p>
+          <p className="font-semibold text-navy">Season complete</p>
+          <p className="text-muted text-sm mt-1">No upcoming fixtures</p>
+        </div>
       )}
 
-      {/* All upcoming fixtures */}
+      {/* Full schedule */}
       <div className="mb-10">
-        <h2 className="text-2xl font-black text-navy mb-5">All Fixtures</h2>
+        <h2 className="text-2xl font-black text-navy mb-5">Full Schedule</h2>
         {Object.keys(byDate).length === 0 ? (
           <div className="bg-white border border-border rounded-2xl p-8 text-center">
             <p className="text-4xl mb-3">✅</p>
@@ -148,68 +236,90 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
           </div>
         ) : (
           <div className="space-y-6">
-            {Object.entries(byDate).map(([date, fixtures]) => (
+            {Object.entries(byDate).map(([date, items]) => (
               <div key={date}>
                 <div className="flex items-center gap-3 mb-3">
                   <div className="bg-brand text-white text-xs font-black px-3 py-1 rounded-full">{date}</div>
                   <div className="flex-1 h-px bg-border" />
                 </div>
                 <div className="space-y-3">
-                  {fixtures.map((f) => {
-                    const isHome = f.homeTeamId === id;
-                    const opponent = isHome ? f.awayTeam : f.homeTeam;
-                    return (
-                      <div key={f.id} className="bg-white border border-border rounded-xl overflow-hidden">
-                        <div className="p-4">
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs text-muted mb-2">{f.competition.name}</p>
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <span className={`text-xs font-black rounded px-1.5 py-0.5 shrink-0 ${isHome ? "bg-brand text-white" : "bg-navy/10 text-navy"}`}>
-                                    {isHome ? "HOME" : "AWAY"}
-                                  </span>
-                                  <span className="font-black text-navy">{team.name}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs font-black rounded px-1.5 py-0.5 shrink-0 bg-navy/10 text-navy">
-                                    {isHome ? "AWAY" : "HOME"}
-                                  </span>
-                                  <span className="font-semibold text-navy/70">{opponent.name}</span>
+                  {items.map((item, idx) => {
+                    if (item.kind === "fixture") {
+                      const f = item.fixture;
+                      const isHome = f.homeTeamId === id;
+                      const opponent = isHome ? f.awayTeam : f.homeTeam;
+                      return (
+                        <div key={f.id} className="bg-white border border-border rounded-xl overflow-hidden">
+                          <div className="p-4">
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs text-muted mb-2">{f.competition.name}</p>
+                                <div className="space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className={`text-xs font-black rounded px-1.5 py-0.5 shrink-0 ${isHome ? "bg-brand text-white" : "bg-navy/10 text-navy"}`}>
+                                      {isHome ? "HOME" : "AWAY"}
+                                    </span>
+                                    <span className="font-black text-navy">{team.name}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs font-black rounded px-1.5 py-0.5 shrink-0 bg-navy/10 text-navy">
+                                      {isHome ? "AWAY" : "HOME"}
+                                    </span>
+                                    <span className="font-semibold text-navy/70">{opponent.name}</span>
+                                  </div>
                                 </div>
                               </div>
+                              <div className="text-right shrink-0">
+                                <p className="text-xl font-black text-navy">{fmt(f.scheduledAt, "time")}</p>
+                                {f.pitch && <p className="text-sm font-semibold text-brand">{f.pitch.name}</p>}
+                                {f.pitch?.venue && <p className="text-xs text-muted">{f.pitch.venue.name}</p>}
+                              </div>
                             </div>
-                            <div className="text-right shrink-0">
-                              <p className="text-xl font-black text-navy">{fmt(f.scheduledAt, "time")}</p>
-                              {f.pitch && (
-                                <p className="text-sm font-semibold text-brand">{f.pitch.name}</p>
-                              )}
-                              {f.pitch?.venue && (
-                                <p className="text-xs text-muted">{f.pitch.venue.name}</p>
-                              )}
+                          </div>
+                          {f.pitch && (
+                            <div className="bg-navy/5 px-4 py-2 flex items-center justify-between gap-4 border-t border-border">
+                              <div className="flex items-center gap-3">
+                                {f.pitch.venue.mapImage && (
+                                  <Link href="/venues" className="text-xs text-brand font-semibold hover:underline">🗺️ Field map</Link>
+                                )}
+                                <a
+                                  href={f.pitch.venue.address ? `https://maps.google.com/?q=${encodeURIComponent(f.pitch.venue.address)}` : "https://maps.google.com/?q=Bolton+Park+Wagga+Wagga"}
+                                  target="_blank" rel="noopener noreferrer"
+                                  className="text-xs text-muted hover:text-brand font-semibold transition-colors"
+                                >
+                                  📍 Directions
+                                </a>
+                              </div>
+                              <p className="text-xs text-muted">{f.pitch.venue.name}</p>
                             </div>
+                          )}
+                        </div>
+                      );
+                    }
+
+                    if (item.kind === "teambye") {
+                      return (
+                        <div key={`bye-${item.competitionName}-${item.round}`} className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3">
+                          <span className="text-2xl">☕</span>
+                          <div>
+                            <p className="font-black text-amber-800 text-sm">BYE — Round {item.round}</p>
+                            <p className="text-amber-700 text-xs">{item.competitionName} · No fixture this round</p>
                           </div>
                         </div>
-                        {/* Footer strip */}
-                        {f.pitch && (
-                          <div className="bg-navy/5 px-4 py-2 flex items-center justify-between gap-4 border-t border-border">
-                            <div className="flex items-center gap-3">
-                              {f.pitch.venue.mapImage && (
-                                <Link href="/venues" className="text-xs text-brand font-semibold hover:underline">🗺️ Field map</Link>
-                              )}
-                              <a
-                                href={f.pitch.venue.address ? `https://maps.google.com/?q=${encodeURIComponent(f.pitch.venue.address)}` : "https://maps.google.com/?q=Bolton+Park+Wagga+Wagga"}
-                                target="_blank" rel="noopener noreferrer"
-                                className="text-xs text-muted hover:text-brand font-semibold transition-colors"
-                              >
-                                📍 Directions
-                              </a>
-                            </div>
-                            <p className="text-xs text-muted">{f.pitch.venue.name}</p>
+                      );
+                    }
+
+                    if (item.kind === "generalbye") {
+                      return (
+                        <div key={`generalbye-${idx}`} className="bg-gray-50 border border-border rounded-xl p-4 flex items-center gap-3">
+                          <span className="text-2xl">📅</span>
+                          <div>
+                            <p className="font-black text-navy text-sm">{item.label}</p>
+                            <p className="text-muted text-xs">All competitions — no games this week</p>
                           </div>
-                        )}
-                      </div>
-                    );
+                        </div>
+                      );
+                    }
                   })}
                 </div>
               </div>
