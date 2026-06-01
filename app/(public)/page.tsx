@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import TeamSearch from "@/components/TeamSearch";
 
 export const dynamic = "force-dynamic";
 
@@ -87,6 +88,9 @@ export default async function HomePage() {
             <p className="text-white/70 text-lg mb-8 max-w-xl">
               Wagga Wagga's home of football — MiniRoos through to Opens. Register now and play in 2026.
             </p>
+            <div className="w-full max-w-lg mb-4">
+              <TeamSearch placeholder="Find your team..." />
+            </div>
             <div className="flex flex-wrap gap-3 justify-center md:justify-start">
               <a
                 href="https://playfootball.com.au/football-finder?st=location&lat=-35.1053&lng=147.3605&suburb=Wagga+Wagga&state_code=NSW&postcode=2650&clubId=75505"
@@ -213,10 +217,15 @@ export default async function HomePage() {
                             <p className="text-xs text-muted mb-1.5">
                               {f.competition.name} · {f.pitch ? `${f.pitch.name}, ${f.pitch.venue.name}` : "TBC"}
                             </p>
-                            <div className="flex items-center gap-2 font-semibold text-navy">
-                              <span className="truncate flex-1">{f.homeTeam.name}</span>
-                              <span className="text-xs font-black bg-navy/10 text-navy rounded px-2 py-0.5 shrink-0">VS</span>
-                              <span className="truncate flex-1 text-right">{f.awayTeam.name}</span>
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-black bg-navy text-white rounded px-1.5 py-0.5 shrink-0">H</span>
+                                <span className="font-bold text-navy text-sm">{f.homeTeam.name}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-black bg-white border border-border text-navy rounded px-1.5 py-0.5 shrink-0">A</span>
+                                <span className="font-semibold text-navy/70 text-sm">{f.awayTeam.name}</span>
+                              </div>
                             </div>
                           </div>
                           <div className="text-right shrink-0 ml-4">

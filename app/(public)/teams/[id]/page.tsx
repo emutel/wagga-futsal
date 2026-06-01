@@ -2,19 +2,22 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
-import { getStandings } from "@/lib/standings";
 import type { Metadata } from "next";
+import TeamPageClient from "./TeamPageClient";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const team = await prisma.team.findUnique({ where: { id } });
-  return { title: team?.name ?? "Team" };
+  return { title: team ? `${team.name} — Football Wagga Wagga` : "Team" };
+}
+
+function fmt(date: Date | string, type: "date" | "time" | "daydate") {
+  const d = new Date(date);
+  if (type === "time") return d.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit", timeZone: "Australia/Sydney" });
+  if (type === "daydate") return d.toLocaleDateString("en-AU", { weekday: "long", day: "numeric", month: "long", timeZone: "Australia/Sydney" });
+  return d.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short", timeZone: "Australia/Sydney" });
 }
 
 export default async function TeamPage({ params }: { params: Promise<{ id: string }> }) {
@@ -23,405 +26,228 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
   const team = await prisma.team.findUnique({
     where: { id },
     include: {
-      players: {
-        include: { player: true },
-        orderBy: { jerseyNumber: "asc" },
-      },
-      competitions: {
-        include: { competition: true },
-        orderBy: { competition: { createdAt: "desc" } },
-      },
+      competitions: { include: { competition: true } },
     },
   });
-
   if (!team) notFound();
 
-  // Get recent fixtures for this team
-  const recentFixtures = await prisma.fixture.findMany({
-    where: {
-      OR: [{ homeTeamId: id }, { awayTeamId: id }],
-      status: { in: ["COMPLETED", "FORFEITED_HOME", "FORFEITED_AWAY"] },
-    },
-    include: {
-      homeTeam: true,
-      awayTeam: true,
-      competition: true,
-      events: {
-        where: { type: "GOAL" },
-        include: {},
-      },
-    },
-    orderBy: { scheduledAt: "desc" },
-    take: 8,
-  });
-
   const upcomingFixtures = await prisma.fixture.findMany({
-    where: {
-      OR: [{ homeTeamId: id }, { awayTeamId: id }],
-      status: "SCHEDULED",
-    },
+    where: { OR: [{ homeTeamId: id }, { awayTeamId: id }], status: "SCHEDULED" },
     include: {
-      homeTeam: true,
-      awayTeam: true,
-      competition: true,
+      homeTeam: true, awayTeam: true, competition: true,
       pitch: { include: { venue: true } },
     },
     orderBy: { scheduledAt: "asc" },
   });
 
-  // Top scorers for this team across all competitions
-  const teamScorers = await prisma.matchEvent.groupBy({
-    by: ["playerId", "playerName", "jerseyNumber"],
-    where: {
-      type: "GOAL",
-      teamId: id,
-      playerId: { not: null },
-    },
-    _count: { id: true },
-    orderBy: { _count: { id: "desc" } },
-    take: 10,
+  const recentFixtures = await prisma.fixture.findMany({
+    where: { OR: [{ homeTeamId: id }, { awayTeamId: id }], status: { in: ["COMPLETED", "FORFEITED_HOME", "FORFEITED_AWAY"] } },
+    include: { homeTeam: true, awayTeam: true, competition: true },
+    orderBy: { scheduledAt: "desc" },
+    take: 5,
   });
 
-  // Current competition standing
-  const activeCompetition = team.competitions.find((tc) =>
-    ["ACTIVE", "FINALS"].includes(tc.competition.status)
-  );
-  const standings = activeCompetition
-    ? await getStandings(activeCompetition.competition.id)
-    : [];
-  const isMiniRoos = true;
-  const teamStanding = standings.find((s) => s.teamId === id);
-  const teamPosition = standings.findIndex((s) => s.teamId === id) + 1;
+  const competitions = team.competitions.map(c => c.competition);
 
-  // Form from last 5 results
-  const formResults = recentFixtures.slice(0, 5).map((f) => {
-    const isHome = f.homeTeamId === id;
-    const myScore = isHome ? f.homeScore : f.awayScore;
-    const oppScore = isHome ? f.awayScore : f.homeScore;
-    if (f.status === "FORFEITED_HOME" && isHome) return "L";
-    if (f.status === "FORFEITED_AWAY" && !isHome) return "L";
-    if (f.status === "FORFEITED_HOME" && !isHome) return "W";
-    if (f.status === "FORFEITED_AWAY" && isHome) return "W";
-    if (myScore > oppScore) return "W";
-    if (myScore < oppScore) return "L";
-    return "D";
-  });
+  // Group upcoming by date
+  const byDate: Record<string, typeof upcomingFixtures> = {};
+  for (const f of upcomingFixtures) {
+    const key = fmt(f.scheduledAt, "daydate");
+    if (!byDate[key]) byDate[key] = [];
+    byDate[key].push(f);
+  }
+
+  const nextGame = upcomingFixtures[0] ?? null;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+
       {/* Header */}
       <div className="mb-8">
-        <Link href="/competition" className="text-brand text-sm font-semibold hover:underline mb-3 inline-block">
-          ← Back to Competitions
-        </Link>
+        <Link href="/competition" className="text-brand text-sm font-semibold hover:underline mb-4 inline-block">← All Competitions</Link>
         <div className="flex items-start justify-between gap-4 flex-wrap">
-          <h1 className="text-4xl font-black text-navy">{team.name}</h1>
-          <a
-            href={`/api/teams/${id}/calendar`}
-            download
-            className="flex items-center gap-2 bg-navy hover:bg-navy-mid text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shrink-0"
-            title="Download fixtures as a calendar file — works with Apple Calendar, Google Calendar and Outlook"
-          >
-            📅 Sync to Calendar
-          </a>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          {/* Upcoming fixtures */}
-          {upcomingFixtures.length > 0 && (
-            <div>
-              <h2 className="text-xl font-black text-navy mb-3">Upcoming</h2>
-              <div className="space-y-2">
-                {upcomingFixtures.map((f) => {
-                  const isHome = f.homeTeamId === id;
-                  const opp = isHome ? f.awayTeam : f.homeTeam;
-                  return (
-                    <div
-                      key={f.id}
-                      className="flex items-center justify-between bg-white border border-border rounded-xl p-4"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs text-muted mb-1">
-                          {f.competition.name} · {f.pitch ? `${f.pitch.name}, ${f.pitch.venue.name}` : "TBC"}
-                          {f.pitch?.venue.mapImage && (
-                            <a
-                              href="/venues"
-                              className="ml-2 text-brand hover:underline text-xs font-semibold"
-                              title="View field map"
-                            >
-                              🗺️ Map
-                            </a>
-                          )}
-                        </p>
-                        <p className="font-semibold text-navy">
-                          {isHome ? "vs" : "@"} {opp.name}
-                        </p>
-                      </div>
-                      <div className="text-right shrink-0 ml-4">
-                        <p className="text-sm font-semibold text-navy">
-                          {new Date(f.scheduledAt).toLocaleDateString("en-AU", {
-                            weekday: "short",
-                            day: "numeric",
-                            month: "short",
-                            timeZone: "Australia/Sydney",
-                          })}
-                        </p>
-                        <p className="text-xs text-muted">
-                          {new Date(f.scheduledAt).toLocaleTimeString("en-AU", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            timeZone: "Australia/Sydney",
-                          })}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Recent results */}
-          {recentFixtures.length > 0 && (
-            <div>
-              <h2 className="text-xl font-black text-navy mb-3">Recent Results</h2>
-              <div className="space-y-2">
-                {recentFixtures.map((f) => {
-                  const isHome = f.homeTeamId === id;
-                  const myScore = isHome ? f.homeScore : f.awayScore;
-                  const oppScore = isHome ? f.awayScore : f.homeScore;
-                  const opp = isHome ? f.awayTeam : f.homeTeam;
-                  const result =
-                    myScore > oppScore ? "W" : myScore < oppScore ? "L" : "D";
-                  const resultColour =
-                    result === "W"
-                      ? "bg-green-100 text-green-700"
-                      : result === "L"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-gray-100 text-gray-600";
-                  return (
-                    <Link
-                      key={f.id}
-                      href={`/live/${f.id}`}
-                      className="flex items-center justify-between bg-white border border-border rounded-xl p-4 hover:border-brand transition-colors"
-                    >
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <span
-                          className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${resultColour}`}
-                        >
-                          {result}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="text-xs text-muted">{f.competition.name}</p>
-                          <p className="font-semibold text-navy truncate">
-                            {isHome ? "vs" : "@"} {opp.name}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right shrink-0 ml-4">
-                        {!isMiniRoos && (
-                          <p className="font-black text-xl text-navy">
-                            {myScore}–{oppScore}
-                          </p>
-                        )}
-                        <p className="text-xs text-muted">
-                          {new Date(f.scheduledAt).toLocaleDateString("en-AU", {
-                            day: "numeric",
-                            month: "short",
-                          })}
-                        </p>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Squad */}
           <div>
-            <h2 className="text-xl font-black text-navy mb-3">
-              Squad — {team.players.length} players
-            </h2>
-            {team.players.length === 0 ? (
-              <p className="text-muted text-sm">No players registered yet.</p>
-            ) : (
-              <div className="bg-white border border-border rounded-xl overflow-hidden">
-                <table className="w-full">
-                  <thead className="bg-navy text-white">
-                    <tr>
-                      <th className="px-4 py-2.5 text-left text-xs font-semibold">#</th>
-                      <th className="px-4 py-2.5 text-left text-xs font-semibold">Name</th>
-                      <th className="px-4 py-2.5 text-center text-xs font-semibold">Goals</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {team.players.map((tp) => {
-                      const scorerEntry = teamScorers.find(
-                        (s) => s.playerId === tp.player.id
-                      );
-                      return (
-                        <tr key={tp.id} className="hover:bg-gray-50">
-                          <td className="px-4 py-2.5 text-sm font-bold text-muted w-12">
-                            {tp.jerseyNumber ?? "—"}
-                          </td>
-                          <td className="px-4 py-2.5 text-sm font-semibold text-navy">
-                            {tp.player.firstName} {tp.player.lastName}
-                          </td>
-                          <td className="px-4 py-2.5 text-center">
-                            {scorerEntry ? (
-                              <span className="font-black text-brand">
-                                {scorerEntry._count.id}
-                              </span>
-                            ) : (
-                              <span className="text-muted text-xs">—</span>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Stats card */}
-          {teamStanding && !isMiniRoos && (
-            <div>
-              <h2 className="text-xl font-black text-navy mb-3">Season Stats</h2>
-              <div className="bg-white border border-border rounded-xl p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted">Position</span>
-                  <span className="font-black text-2xl text-navy">{teamPosition}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted">Points</span>
-                  <span className="font-black text-brand text-xl">{teamStanding.points}</span>
-                </div>
-                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-border text-center">
-                  <div>
-                    <p className="text-xs text-muted">W</p>
-                    <p className="font-black text-green-600">{teamStanding.won}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted">D</p>
-                    <p className="font-black text-gray-500">{teamStanding.drawn}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted">L</p>
-                    <p className="font-black text-red-500">{teamStanding.lost}</p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-border">
-                  <span className="text-xs text-muted">Goals For / Against</span>
-                  <span className="font-semibold text-sm">
-                    {teamStanding.goalsFor} / {teamStanding.goalsAgainst}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted">Goal Difference</span>
-                  <span
-                    className={`font-bold text-sm ${
-                      teamStanding.goalDifference >= 0 ? "text-green-600" : "text-red-500"
-                    }`}
-                  >
-                    {teamStanding.goalDifference > 0
-                      ? `+${teamStanding.goalDifference}`
-                      : teamStanding.goalDifference}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Form */}
-          {formResults.length > 0 && !isMiniRoos && (
-            <div>
-              <h2 className="text-xl font-black text-navy mb-3">Form</h2>
-              <div className="flex gap-1.5">
-                {formResults.map((r, i) => (
-                  <span
-                    key={i}
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-black text-white ${
-                      r === "W"
-                        ? "bg-green-500"
-                        : r === "L"
-                        ? "bg-red-500"
-                        : "bg-gray-400"
-                    }`}
-                  >
-                    {r}
-                  </span>
-                ))}
-              </div>
-              <p className="text-xs text-muted mt-2">Last {formResults.length} games (newest left)</p>
-            </div>
-          )}
-
-          {/* Top scorers */}
-          {teamScorers.length > 0 && (
-            <div>
-              <h2 className="text-xl font-black text-navy mb-3">Top Scorers</h2>
-              <div className="bg-white border border-border rounded-xl overflow-hidden">
-                {teamScorers.slice(0, 8).map((s, i) => (
-                  <div
-                    key={s.playerId ?? i}
-                    className="flex items-center justify-between px-3 py-2.5 border-b border-border last:border-0"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="text-muted text-xs w-4">{i + 1}.</span>
-                      <span className="font-semibold text-sm text-navy">
-                        {s.playerName ?? "Unknown"}
-                        {s.jerseyNumber ? (
-                          <span className="text-muted text-xs ml-1">#{s.jerseyNumber}</span>
-                        ) : null}
-                      </span>
-                    </div>
-                    <span className="font-black text-brand">{s._count.id}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Competitions */}
-          <div>
-            <h2 className="text-xl font-black text-navy mb-3">Competitions</h2>
-            <div className="space-y-2">
-              {team.competitions.map((tc) => (
-                <Link
-                  key={tc.id}
-                  href={`/competition?comp=${tc.competition.id}`}
-                  className="flex items-center justify-between bg-white border border-border rounded-lg px-3 py-2.5 hover:border-brand transition-colors"
-                >
-                  <span className="text-sm font-semibold text-navy">
-                    {tc.competition.name}
-                  </span>
-                  <span
-                    className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                      tc.competition.status === "ACTIVE"
-                        ? "bg-green-100 text-green-700"
-                        : tc.competition.status === "FINALS"
-                        ? "bg-brand text-white"
-                        : tc.competition.status === "COMPLETED"
-                        ? "bg-gray-100 text-gray-600"
-                        : "bg-blue-100 text-blue-700"
-                    }`}
-                  >
-                    {tc.competition.status}
-                  </span>
+            <h1 className="text-3xl md:text-4xl font-black text-navy">{team.name}</h1>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {competitions.map(c => (
+                <Link key={c.id} href={`/competition?comp=${c.id}`} className="text-xs bg-navy/10 hover:bg-navy/20 text-navy font-semibold px-3 py-1 rounded-full transition-colors">
+                  {c.name}
                 </Link>
               ))}
             </div>
           </div>
+          <div className="flex gap-2 flex-wrap">
+            <TeamPageClient teamId={id} teamName={team.name} />
+            <a
+              href={`/api/teams/${id}/calendar`}
+              download
+              className="flex items-center gap-2 bg-navy hover:bg-navy-mid text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+            >
+              📅 Sync to Calendar
+            </a>
+          </div>
         </div>
       </div>
+
+      {/* Next game hero card */}
+      {nextGame && (
+        <div className="bg-navy rounded-2xl p-6 mb-8 text-white">
+          <p className="text-white/50 text-xs uppercase tracking-widest mb-3 font-semibold">Next Game</p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-3 flex-1">
+              <div className="flex items-center gap-3">
+                <span className={`text-xs font-black rounded px-2 py-1 shrink-0 ${nextGame.homeTeamId === id ? "bg-brand text-white" : "bg-white/20 text-white"}`}>HOME</span>
+                <span className={`font-black text-lg leading-tight ${nextGame.homeTeamId === id ? "text-brand" : "text-white"}`}>{nextGame.homeTeam.name}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`text-xs font-black rounded px-2 py-1 shrink-0 ${nextGame.awayTeamId === id ? "bg-brand text-white" : "bg-white/20 text-white"}`}>AWAY</span>
+                <span className={`font-black text-lg leading-tight ${nextGame.awayTeamId === id ? "text-brand" : "text-white"}`}>{nextGame.awayTeam.name}</span>
+              </div>
+            </div>
+            <div className="text-right shrink-0 border-t sm:border-t-0 sm:border-l border-white/20 pt-4 sm:pt-0 sm:pl-6">
+              <p className="text-2xl font-black text-white">{fmt(nextGame.scheduledAt, "time")}</p>
+              <p className="text-white/70 text-sm">{fmt(nextGame.scheduledAt, "daydate")}</p>
+              {nextGame.pitch && (
+                <>
+                  <p className="text-brand font-semibold text-sm mt-1">{nextGame.pitch.name}</p>
+                  <p className="text-white/50 text-xs">{nextGame.pitch.venue.name}</p>
+                  {nextGame.pitch.venue.mapImage && (
+                    <Link href="/venues" className="text-xs text-brand hover:underline font-semibold mt-1 inline-block">🗺️ View field map</Link>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-white/10 flex gap-3 flex-wrap">
+            <a
+              href={nextGame.pitch?.venue.address ? `https://maps.google.com/?q=${encodeURIComponent(nextGame.pitch.venue.address)}` : "https://maps.google.com/?q=Bolton+Park+Wagga+Wagga"}
+              target="_blank" rel="noopener noreferrer"
+              className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg font-semibold transition-colors"
+            >
+              📍 Get Directions
+            </a>
+            <a
+              href={`/api/teams/${id}/calendar`}
+              download
+              className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg font-semibold transition-colors"
+            >
+              📅 Add to Calendar
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* All upcoming fixtures */}
+      <div className="mb-10">
+        <h2 className="text-2xl font-black text-navy mb-5">All Fixtures</h2>
+        {Object.keys(byDate).length === 0 ? (
+          <div className="bg-white border border-border rounded-2xl p-8 text-center">
+            <p className="text-4xl mb-3">✅</p>
+            <p className="font-semibold text-navy">No upcoming fixtures</p>
+            <p className="text-muted text-sm mt-1">All games have been played</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {Object.entries(byDate).map(([date, fixtures]) => (
+              <div key={date}>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="bg-brand text-white text-xs font-black px-3 py-1 rounded-full">{date}</div>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+                <div className="space-y-3">
+                  {fixtures.map((f) => {
+                    const isHome = f.homeTeamId === id;
+                    const opponent = isHome ? f.awayTeam : f.homeTeam;
+                    return (
+                      <div key={f.id} className="bg-white border border-border rounded-xl overflow-hidden">
+                        <div className="p-4">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-muted mb-2">{f.competition.name}</p>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-xs font-black rounded px-1.5 py-0.5 shrink-0 ${isHome ? "bg-brand text-white" : "bg-navy/10 text-navy"}`}>
+                                    {isHome ? "HOME" : "AWAY"}
+                                  </span>
+                                  <span className="font-black text-navy">{team.name}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs font-black rounded px-1.5 py-0.5 shrink-0 bg-navy/10 text-navy">
+                                    {isHome ? "AWAY" : "HOME"}
+                                  </span>
+                                  <span className="font-semibold text-navy/70">{opponent.name}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <p className="text-xl font-black text-navy">{fmt(f.scheduledAt, "time")}</p>
+                              {f.pitch && (
+                                <p className="text-sm font-semibold text-brand">{f.pitch.name}</p>
+                              )}
+                              {f.pitch?.venue && (
+                                <p className="text-xs text-muted">{f.pitch.venue.name}</p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        {/* Footer strip */}
+                        {f.pitch && (
+                          <div className="bg-navy/5 px-4 py-2 flex items-center justify-between gap-4 border-t border-border">
+                            <div className="flex items-center gap-3">
+                              {f.pitch.venue.mapImage && (
+                                <Link href="/venues" className="text-xs text-brand font-semibold hover:underline">🗺️ Field map</Link>
+                              )}
+                              <a
+                                href={f.pitch.venue.address ? `https://maps.google.com/?q=${encodeURIComponent(f.pitch.venue.address)}` : "https://maps.google.com/?q=Bolton+Park+Wagga+Wagga"}
+                                target="_blank" rel="noopener noreferrer"
+                                className="text-xs text-muted hover:text-brand font-semibold transition-colors"
+                              >
+                                📍 Directions
+                              </a>
+                            </div>
+                            <p className="text-xs text-muted">{f.pitch.venue.name}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Recent results */}
+      {recentFixtures.length > 0 && (
+        <div>
+          <h2 className="text-2xl font-black text-navy mb-4">Recent Results</h2>
+          <div className="space-y-2">
+            {recentFixtures.map((f) => {
+              const isHome = f.homeTeamId === id;
+              const opponent = isHome ? f.awayTeam : f.homeTeam;
+              return (
+                <div key={f.id} className="bg-white border border-border rounded-xl p-4 flex items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-muted mb-1">{f.competition.name} · {fmt(f.scheduledAt, "date")}</p>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs font-black rounded px-1.5 py-0.5 shrink-0 ${isHome ? "bg-navy text-white" : "bg-navy/10 text-navy"}`}>{isHome ? "H" : "A"}</span>
+                        <span className="font-bold text-navy text-sm truncate">{team.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs font-black rounded px-1.5 py-0.5 shrink-0 ${!isHome ? "bg-navy text-white" : "bg-navy/10 text-navy"}`}>{!isHome ? "H" : "A"}</span>
+                        <span className="font-semibold text-navy/70 text-sm truncate">{opponent.name}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-xs text-muted font-semibold shrink-0 bg-navy/10 px-2 py-1 rounded">FT</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

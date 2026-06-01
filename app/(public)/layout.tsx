@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import MyTeamBanner from "@/components/MyTeamBanner";
 
 const NAV_LINKS = [
   { href: "/competition", label: "Competitions" },
