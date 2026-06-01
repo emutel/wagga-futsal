@@ -20,6 +20,26 @@ function fmt(date: Date | string, type: "date" | "time" | "daydate") {
   return d.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short", timeZone: "Australia/Sydney" });
 }
 
+/** Build a /venues URL that carries game context for the reminder banner */
+function venueUrl(
+  pitch: { name: string; venue: { name: string } },
+  home: string,
+  away: string,
+  scheduledAt: Date | string,
+  comp: string
+): string {
+  const params = new URLSearchParams({
+    field: pitch.name,
+    venue: pitch.venue.name,
+    home,
+    away,
+    time: fmt(scheduledAt, "time"),
+    date: fmt(scheduledAt, "daydate"),
+    comp,
+  });
+  return `/venues?${params.toString()}`;
+}
+
 // Known competition-wide BYE weeks (no games scheduled these Saturdays)
 const GENERAL_BYES = [
   { date: new Date("2026-06-06T00:00:00+10:00"), label: "Long Weekend — No games scheduled" },
@@ -194,7 +214,12 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                   <p className="text-brand font-semibold text-sm mt-1">{nextGame.pitch.name}</p>
                   <p className="text-white/50 text-xs">{nextGame.pitch.venue.name}</p>
                   {nextGame.pitch.venue.mapImage && (
-                    <Link href="/venues" className="text-xs text-brand hover:underline font-semibold mt-1 inline-block">🗺️ View field map</Link>
+                    <Link
+                      href={venueUrl(nextGame.pitch, nextGame.homeTeam.name, nextGame.awayTeam.name, nextGame.scheduledAt, nextGame.competition.name)}
+                      className="text-xs text-brand hover:underline font-semibold mt-1 inline-block"
+                    >
+                      🗺️ View field map
+                    </Link>
                   )}
                 </>
               )}
@@ -280,7 +305,12 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                             <div className="bg-navy/5 px-4 py-2 flex items-center justify-between gap-4 border-t border-border">
                               <div className="flex items-center gap-3">
                                 {f.pitch.venue.mapImage && (
-                                  <Link href="/venues" className="text-xs text-brand font-semibold hover:underline">🗺️ Field map</Link>
+                                  <Link
+                                    href={venueUrl(f.pitch, f.homeTeam.name, f.awayTeam.name, f.scheduledAt, f.competition.name)}
+                                    className="text-xs text-brand font-semibold hover:underline"
+                                  >
+                                    🗺️ Field map
+                                  </Link>
                                 )}
                                 <a
                                   href={f.pitch.venue.address ? `https://maps.google.com/?q=${encodeURIComponent(f.pitch.venue.address)}` : "https://maps.google.com/?q=Bolton+Park+Wagga+Wagga"}
