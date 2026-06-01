@@ -50,13 +50,22 @@ function iconFor(title: string) {
   return "📌";
 }
 
-export default function RulesViewer({ sections, version, publishedAt }: {
+export default function RulesViewer({ sections, version, publishedAt, initialQuery = "" }: {
   sections: Section[];
   version: string;
   publishedAt: string;
+  initialQuery?: string;
 }) {
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState<Set<number>>(new Set([0]));
+  const [query, setQuery] = useState(initialQuery);
+  const [open, setOpen] = useState<Set<number>>(() => {
+    if (!initialQuery) return new Set([0]);
+    // Pre-open all sections matching initial query
+    const q = initialQuery.toLowerCase();
+    const matching = sections
+      .filter((s) => s.title.toLowerCase().includes(q) || s.content.toLowerCase().includes(q))
+      .map((s) => s.index);
+    return new Set(matching.length > 0 ? matching : [0]);
+  });
 
   const filtered = useMemo(() => {
     if (!query.trim()) return sections;

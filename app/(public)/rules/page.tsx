@@ -6,6 +6,8 @@ import type { Section } from "./RulesViewer";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Competition Rules" };
 
+type SearchParams = Promise<{ q?: string }>;
+
 function parseSections(md: string): Section[] {
   const lines = md.split("\n");
   const sections: Section[] = [];
@@ -26,7 +28,8 @@ function parseSections(md: string): Section[] {
   return sections;
 }
 
-export default async function RulesPage() {
+export default async function RulesPage({ searchParams }: { searchParams: SearchParams }) {
+  const { q } = await searchParams;
   const doc = await prisma.rulesDocument.findFirst({
     where: { active: true },
     orderBy: { publishedAt: "desc" },
@@ -66,6 +69,7 @@ export default async function RulesPage() {
           sections={parseSections(doc.content)}
           version={doc.version}
           publishedAt={doc.publishedAt.toISOString()}
+          initialQuery={q ?? ""}
         />
       ) : (
         <div className="bg-white border border-border rounded-2xl p-12 text-center">

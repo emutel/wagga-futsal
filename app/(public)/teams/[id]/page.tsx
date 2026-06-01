@@ -40,6 +40,40 @@ function venueUrl(
   return `/venues?${params.toString()}`;
 }
 
+// Age-group match timing (Football Australia Miniroos guidelines)
+const AGE_GROUP_TIMING: Record<string, { halves: number; halfLength: number; halfTimeBreak: number }> = {
+  "u6":    { halves: 4, halfLength: 8,  halfTimeBreak: 5  },
+  "u7":    { halves: 4, halfLength: 8,  halfTimeBreak: 5  },
+  "u8":    { halves: 4, halfLength: 8,  halfTimeBreak: 5  },
+  "u7/8":  { halves: 4, halfLength: 8,  halfTimeBreak: 5  },
+  "u9":    { halves: 2, halfLength: 20, halfTimeBreak: 5  },
+  "u10":   { halves: 2, halfLength: 20, halfTimeBreak: 5  },
+  "u9/10": { halves: 2, halfLength: 20, halfTimeBreak: 5  },
+  "u11":   { halves: 2, halfLength: 25, halfTimeBreak: 5  },
+  "u12":   { halves: 2, halfLength: 25, halfTimeBreak: 5  },
+  "u11/12":{ halves: 2, halfLength: 25, halfTimeBreak: 5  },
+  "u13":   { halves: 2, halfLength: 30, halfTimeBreak: 10 },
+  "u14":   { halves: 2, halfLength: 30, halfTimeBreak: 10 },
+  "u13/14":{ halves: 2, halfLength: 30, halfTimeBreak: 10 },
+  "u15":   { halves: 2, halfLength: 35, halfTimeBreak: 10 },
+  "u16":   { halves: 2, halfLength: 35, halfTimeBreak: 10 },
+  "u15/16":{ halves: 2, halfLength: 35, halfTimeBreak: 10 },
+  "u17":   { halves: 2, halfLength: 40, halfTimeBreak: 10 },
+  "u18":   { halves: 2, halfLength: 40, halfTimeBreak: 10 },
+};
+
+function getAgeGroupTiming(competitionName: string) {
+  const match = competitionName.match(/[Uu](\d+(?:\/\d+)?)/);
+  if (!match) return null;
+  const key = `u${match[1].toLowerCase()}`;
+  return AGE_GROUP_TIMING[key] ?? null;
+}
+
+function timingLabel(t: { halves: number; halfLength: number; halfTimeBreak: number }) {
+  if (t.halves === 4) return `4 × ${t.halfLength} min quarters · ${t.halfTimeBreak} min break`;
+  return `2 × ${t.halfLength} min halves · ${t.halfTimeBreak} min half-time`;
+}
+
 // Known competition-wide BYE weeks (no games scheduled these Saturdays)
 const GENERAL_BYES = [
   { date: new Date("2026-06-06T00:00:00+10:00"), label: "Long Weekend — No games scheduled" },
@@ -161,6 +195,10 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
 
   const nextGame = upcomingFixtures[0] ?? null;
 
+  // Timing for this team — try nextGame's competition first, else first listed competition
+  const primaryCompName = nextGame?.competition.name ?? competitions[0]?.name ?? "";
+  const timing = getAgeGroupTiming(primaryCompName);
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
 
@@ -225,21 +263,37 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
               )}
             </div>
           </div>
-          <div className="mt-4 pt-4 border-t border-white/10 flex gap-3 flex-wrap">
-            <a
-              href={nextGame.pitch?.venue.address ? `https://maps.google.com/?q=${encodeURIComponent(nextGame.pitch.venue.address)}` : "https://maps.google.com/?q=Bolton+Park+Wagga+Wagga"}
-              target="_blank" rel="noopener noreferrer"
-              className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg font-semibold transition-colors"
-            >
-              📍 Get Directions
-            </a>
-            <a
-              href={`/api/teams/${id}/calendar`}
-              download
-              className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg font-semibold transition-colors"
-            >
-              📅 Add to Calendar
-            </a>
+          <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-3">
+            <div className="flex gap-3 flex-wrap">
+              <a
+                href={nextGame.pitch?.venue.address ? `https://maps.google.com/?q=${encodeURIComponent(nextGame.pitch.venue.address)}` : "https://maps.google.com/?q=Bolton+Park+Wagga+Wagga"}
+                target="_blank" rel="noopener noreferrer"
+                className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg font-semibold transition-colors"
+              >
+                📍 Get Directions
+              </a>
+              <a
+                href={`/api/teams/${id}/calendar`}
+                download
+                className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg font-semibold transition-colors"
+              >
+                📅 Add to Calendar
+              </a>
+              {timing && (
+                <Link
+                  href="/rules?q=half"
+                  className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg font-semibold transition-colors"
+                >
+                  📋 Rules
+                </Link>
+              )}
+            </div>
+            {timing && (
+              <div className="flex items-center gap-2 text-white/60 text-xs">
+                <span>⏱</span>
+                <span>{timingLabel(timing)}</span>
+              </div>
+            )}
           </div>
         </div>
       ) : (
@@ -303,7 +357,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                           </div>
                           {f.pitch && (
                             <div className="bg-navy/5 px-4 py-2 flex items-center justify-between gap-4 border-t border-border">
-                              <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-3 flex-wrap">
                                 {f.pitch.venue.mapImage && (
                                   <Link
                                     href={venueUrl(f.pitch, f.homeTeam.name, f.awayTeam.name, f.scheduledAt, f.competition.name)}
@@ -319,8 +373,25 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                                 >
                                   📍 Directions
                                 </a>
+                                {(() => {
+                                  const t = getAgeGroupTiming(f.competition.name);
+                                  return t ? (
+                                    <Link
+                                      href="/rules?q=half"
+                                      className="text-xs text-muted hover:text-brand font-semibold transition-colors"
+                                    >
+                                      📋 Rules
+                                    </Link>
+                                  ) : null;
+                                })()}
                               </div>
-                              <p className="text-xs text-muted">{f.pitch.venue.name}</p>
+                              <div className="text-right shrink-0">
+                                <p className="text-xs text-muted">{f.pitch.venue.name}</p>
+                                {(() => {
+                                  const t = getAgeGroupTiming(f.competition.name);
+                                  return t ? <p className="text-xs text-muted/70">⏱ {timingLabel(t)}</p> : null;
+                                })()}
+                              </div>
                             </div>
                           )}
                         </div>
