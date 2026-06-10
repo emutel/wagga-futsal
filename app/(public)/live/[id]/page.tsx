@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     description: `${fixture.competition.name} · ${score}`,
     openGraph: {
       title: `${status}: ${score}`,
-      description: `${fixture.competition.name} · Follow the action live on FOOTBALL WAGGA WAGGA`,
+      description: `${fixture.competition.name} · Follow the action live on Wagga Futsal`,
       type: "website",
     },
   };

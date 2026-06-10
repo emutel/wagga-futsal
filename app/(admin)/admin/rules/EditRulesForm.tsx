@@ -18,7 +18,7 @@ type Props = {
 
 export default function EditRulesForm({ currentDoc, onSaved }: Props) {
   const [form, setForm] = useState({
-    title: currentDoc?.title ?? "FOOTBALL WAGGA WAGGA Rules",
+    title: currentDoc?.title ?? "Wagga Futsal Rules",
     content: currentDoc?.content ?? "",
     version: currentDoc?.version ?? "1.0",
   });

@@ -65,12 +65,12 @@ export default async function CompetitionPage({
       <h1 className="text-3xl font-black text-navy mb-2">Competitions</h1>
 
       {/* Competition tabs */}
-      <div className="flex flex-wrap gap-2 mb-8 overflow-hidden">
+      <div className="flex flex-wrap gap-2 mb-8">
         {competitions.map((c) => (
           <Link
             key={c.id}
             href={`/competition?comp=${c.id}`}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
               c.id === activeComp.id
                 ? "bg-brand text-white"
                 : "bg-white border border-border text-navy hover:border-brand"
@@ -116,7 +116,7 @@ export default async function CompetitionPage({
                           </span>
                         ) : (
                           <span className="text-xs text-muted">
-                            {new Date(f.scheduledAt).toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" , timeZone: "Australia/Sydney"})}
+                            {new Date(f.scheduledAt).toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" })}
                           </span>
                         )}
                         <p className={`text-xs font-bold mt-0.5 ${isLive ? "text-live" : "text-muted"}`}>
@@ -138,8 +138,7 @@ export default async function CompetitionPage({
           ))}
         </div>
 
-        {/* Sidebar hidden */}
-        {false && (<>
+        {/* Sidebar: ladder + scorers */}
         <div className="space-y-6">
           {/* Ladder */}
           <div>
@@ -208,7 +207,6 @@ export default async function CompetitionPage({
             </div>
           )}
         </div>
-        </>)}
       </div>
     </div>
   );

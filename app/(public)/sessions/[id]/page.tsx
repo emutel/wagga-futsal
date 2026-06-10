@@ -27,8 +27,9 @@ export default async function SessionBookingPage({ params }: { params: Promise<{
       <h1 className="text-2xl font-black text-navy mb-1">{session.title}</h1>
       <p className="text-muted text-sm mb-6">
         {new Date(session.scheduledAt).toLocaleDateString("en-AU", {
-          weekday: "long", day: "numeric", month: "long", timeZone: "Australia/Sydney"})}{" · "}
-        {new Date(session.scheduledAt).toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" , timeZone: "Australia/Sydney"})}
+          weekday: "long", day: "numeric", month: "long",
+        })}{" · "}
+        {new Date(session.scheduledAt).toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" })}
         {" · "}{session.durationMins} mins{" · "}
         <span className="font-semibold text-brand">${(session.priceCents / 100).toFixed(2)}</span>
       </p>

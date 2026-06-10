@@ -9,16 +9,16 @@ export default async function RefereeProtectedLayout({ children }: { children: R
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-navy text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10 shadow-lg">
-        <div className="flex items-center gap-2 min-w-0">
-          <Image src="/logo.png" alt="FOOTBALL WAGGA" width={32} height={32} className="rounded shrink-0" />
-          <div className="min-w-0">
-            <p className="font-black text-white text-xs leading-tight">FOOTBALL WAGGA</p>
+      <header className="bg-navy text-white px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Image src="/logo.png" alt="Wagga Futsal" width={36} height={36} className="rounded" />
+          <div>
+            <p className="font-black text-white text-sm leading-tight">WAGGA FUTSAL</p>
             <p className="text-white/60 text-xs">Referee Portal</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-white/70 hidden sm:block truncate max-w-32">{session.user.name}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-white/70">{session.user.name}</span>
           <LogoutButton />
         </div>
       </header>

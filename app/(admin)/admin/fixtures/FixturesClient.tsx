@@ -79,32 +79,30 @@ export default function FixturesClient({
             <div key={round} className="mb-6">
               <h2 className="text-sm font-bold text-navy mb-2 uppercase tracking-wide">{label}</h2>
               <div className="bg-white border border-border rounded-xl overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm min-w-[600px]">
-                    <thead className="bg-navy text-white">
-                      <tr>
-                        <th className="px-4 py-2.5 text-left font-semibold">Rd</th>
-                        <th className="px-4 py-2.5 text-left font-semibold">Match</th>
-                        <th className="px-4 py-2.5 text-left font-semibold">Date/Time</th>
-                        <th className="px-4 py-2.5 text-left font-semibold">Pitch</th>
-                        <th className="px-4 py-2.5 text-left font-semibold">Ref / Scorer</th>
-                        <th className="px-4 py-2.5 text-left font-semibold">Status</th>
-                        <th className="px-4 py-2.5 text-left font-semibold"></th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                      {roundFixtures.map((f) => (
-                        <FixtureRow
-                          key={f.id}
-                          fixture={f}
-                          referees={referees}
-                          pitches={pitches}
-                          onUpdated={handleUpdated}
-                        />
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <table className="w-full text-sm">
+                  <thead className="bg-navy text-white">
+                    <tr>
+                      <th className="px-4 py-2.5 text-left font-semibold">Rd</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Match</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Date/Time</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Pitch</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Ref / Scorer</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Status</th>
+                      <th className="px-4 py-2.5 text-left font-semibold"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {roundFixtures.map((f) => (
+                      <FixtureRow
+                        key={f.id}
+                        fixture={f}
+                        referees={referees}
+                        pitches={pitches}
+                        onUpdated={handleUpdated}
+                      />
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           );

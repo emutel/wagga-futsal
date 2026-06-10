@@ -47,7 +47,7 @@ export default function PayrollClient({ initialRate }: { initialRate: RateRow | 
     scorerCents: 2500,
     orgBsb: "",
     orgAccount: "",
-    orgName: "FOOTBALL WAGGA WAGGA",
+    orgName: "Wagga Futsal",
     orgBank: "WBC",
     orgApcaId: "",
   });
@@ -185,14 +185,14 @@ export default function PayrollClient({ initialRate }: { initialRate: RateRow | 
       {/* Organisation Bank Details */}
       <div className="bg-white border border-border rounded-xl p-6">
         <h2 className="text-lg font-black text-navy mb-1">Organisation Bank Details</h2>
-        <p className="text-xs text-muted mb-4">Your FOOTBALL WAGGA WAGGA account — the account payments are sent from.</p>
+        <p className="text-xs text-muted mb-4">Your Wagga Futsal account — the account payments are sent from.</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-xs font-semibold text-muted mb-1">Account Name</label>
             <input
               value={rate.orgName ?? ""}
               onChange={(e) => setRate((r) => ({ ...r, orgName: e.target.value }))}
-              placeholder="FOOTBALL WAGGA WAGGA Pty Ltd"
+              placeholder="Wagga Futsal Pty Ltd"
               className="border border-border rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-brand"
             />
           </div>

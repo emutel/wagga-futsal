@@ -97,7 +97,7 @@ export async function POST(req: Request) {
       const scorerGames = fixtures.filter((f) => f.scorerId === ref.id).length;
       const amountCents = fieldRefGames * fieldRefRate + scorerGames * scorerRate;
       if (!amountCents || !ref.bsb || !ref.accountNumber || !ref.accountName) return [];
-      return [{ bsb: ref.bsb, accountNumber: ref.accountNumber, accountName: ref.accountName, amountCents, reference: "FOOTBALL WAGGA WAGGA GAME FEE" }];
+      return [{ bsb: ref.bsb, accountNumber: ref.accountNumber, accountName: ref.accountName, amountCents, reference: "WAGGA FUTSAL GAME FEE" }];
     });
 
   if (payees.length === 0) {

@@ -1,31 +1,23 @@
-"use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
-import MyTeamBanner from "@/components/MyTeamBanner";
 
 const NAV_LINKS = [
   { href: "/competition", label: "Competitions" },
   { href: "/sessions", label: "Book a Session" },
   { href: "/rules", label: "Rules" },
-  { href: "/venues", label: "Venues" },
   { href: "/gallery", label: "Gallery" },
   { href: "/sponsors", label: "Sponsors" },
 ];
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <>
       <header className="bg-navy text-white sticky top-0 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="FOOTBALL WAGGA WAGGA" width={44} height={44} className="rounded" priority />
-            <span className="text-white font-black text-lg tracking-tight hidden sm:block">FOOTBALL WAGGA WAGGA</span>
+            <Image src="/logo.png" alt="Wagga Futsal" width={44} height={44} className="rounded" priority />
+            <span className="text-white font-black text-lg tracking-tight hidden sm:block">WAGGA FUTSAL</span>
           </Link>
-
-          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
             {NAV_LINKS.map((l) => (
               <Link
@@ -37,42 +29,13 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               </Link>
             ))}
           </nav>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/referee/login"
-              className="text-xs bg-brand hover:bg-brand-dark text-white px-3 py-1.5 rounded font-semibold transition-colors"
-            >
-              Referee Login
-            </Link>
-            {/* Hamburger */}
-            <button
-              className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
-            >
-              <span className={`block w-6 h-0.5 bg-white transition-transform ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
-              <span className={`block w-6 h-0.5 bg-white transition-opacity ${menuOpen ? "opacity-0" : ""}`} />
-              <span className={`block w-6 h-0.5 bg-white transition-transform ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
-            </button>
-          </div>
+          <Link
+            href="/referee/login"
+            className="text-xs bg-brand hover:bg-brand-dark text-white px-3 py-1.5 rounded font-semibold transition-colors"
+          >
+            Referee Login
+          </Link>
         </div>
-
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="md:hidden bg-navy-mid border-t border-white/10 px-4 py-4 flex flex-col gap-4">
-            {NAV_LINKS.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="text-sm font-semibold text-white/80 hover:text-brand transition-colors"
-                onClick={() => setMenuOpen(false)}
-              >
-                {l.label}
-              </Link>
-            ))}
-          </div>
-        )}
       </header>
 
       <main className="flex-1">{children}</main>
@@ -80,10 +43,10 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <footer className="bg-navy text-white/60 mt-16">
         <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <Image src="/logo.png" alt="FOOTBALL WAGGA WAGGA" width={64} height={64} className="rounded mb-2" />
-            <p className="text-sm">Wagga Wagga&apos;s premier football association.</p>
+            <Image src="/logo.png" alt="Wagga Futsal" width={64} height={64} className="rounded mb-2" />
+            <p className="text-sm">Wagga Wagga&apos;s premier indoor futsal competition since 2012.</p>
             <p className="text-sm mt-1">
-              Venue: Bolton Park Stadium, Wagga Wagga NSW 2650
+              Venues: EQUEX Multi Purpose Sports Centre &amp; Bolton Park Stadium
             </p>
           </div>
           <div>
@@ -114,7 +77,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </div>
         </div>
         <div className="border-t border-white/10 text-center py-4 text-xs">
-          © {new Date().getFullYear()} FOOTBALL WAGGA WAGGA Pty Ltd. All rights reserved.
+          © {new Date().getFullYear()} Wagga Futsal Pty Ltd. All rights reserved.
         </div>
       </footer>
     </>

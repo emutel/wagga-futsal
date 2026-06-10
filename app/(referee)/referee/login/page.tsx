@@ -36,7 +36,7 @@ export default function RefereeLoginPage() {
     <div className="min-h-screen bg-navy flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <p className="text-brand font-black text-2xl">FOOTBALL WAGGA WAGGA</p>
+          <p className="text-brand font-black text-2xl">WAGGA FUTSAL</p>
           <p className="text-white/60 text-sm mt-1">Referee & Admin Portal</p>
         </div>
 
