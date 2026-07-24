@@ -99,19 +99,18 @@ export default async function HomePage() {
             <h1 className="text-5xl md:text-6xl font-black mb-4">
               WAGGA <span className="text-brand">FUTSAL</span>
             </h1>
+            <p className="text-white font-bold text-xl mb-2">You Are Your Only Limit!</p>
             <p className="text-white/70 text-lg mb-8 max-w-xl">
-              Indoor futsal for all ages — from Under 8s to Opens. Register now and join the
-              competition.
+              High speed, high energy, high skill — indoor futsal for all ages, from Under 8s to
+              Opens. Summer 2026 registration is open now.
             </p>
             <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-              <a
-                href="https://playfootball.com.au/football-finder?st=location&lat=-35.1053&lng=147.3605&suburb=Wagga+Wagga&state_code=NSW&postcode=2650&clubId=75505"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/register"
                 className="bg-brand hover:bg-brand-dark text-white font-bold px-6 py-3 rounded-lg transition-colors"
               >
-                Register Now
-              </a>
+                Register for Summer 2026
+              </Link>
               <Link
                 href="/competition"
                 className="border border-white/30 hover:border-brand text-white font-semibold px-6 py-3 rounded-lg transition-colors"
@@ -136,6 +135,25 @@ export default async function HomePage() {
               priority
             />
           </div>
+        </div>
+      </section>
+
+      {/* Summer 2026 season banner */}
+      <section className="bg-brand text-white px-4 py-5">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-center sm:text-left">
+            <p className="font-black text-lg leading-tight">Summer 2026 kicks off 14–15 October</p>
+            <p className="text-white/85 text-sm">
+              Wed: U8 · U10 · U16 · Opens &nbsp;|&nbsp; Thu: U12 · U14 &nbsp;·&nbsp; $215 juniors / $230
+              seniors
+            </p>
+          </div>
+          <Link
+            href="/register"
+            className="shrink-0 bg-white text-brand font-bold px-5 py-2.5 rounded-lg hover:bg-navy hover:text-white transition-colors text-sm"
+          >
+            Season details & registration →
+          </Link>
         </div>
       </section>
 

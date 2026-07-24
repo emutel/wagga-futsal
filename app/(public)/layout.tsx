@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const NAV_LINKS = [
+  { href: "/register", label: "Register 2026" },
   { href: "/competition", label: "Competitions" },
   { href: "/sessions", label: "Book a Session" },
   { href: "/rules", label: "Rules" },
